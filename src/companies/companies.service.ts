@@ -17,8 +17,8 @@ async  create(createCompanyDto: CreateCompanyDto) {
     return await this.companyRepository.save(createCompanyDto);
   }
 
-  findAll() {
-    return `This action returns all companies`;
+  async findAll() {
+    return await this.companyRepository.find();
   }
 
   async findOne(id: number) {
