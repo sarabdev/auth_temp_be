@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Request,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-userdto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,29 +27,66 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Param('companyId') companyId: number,
   ) {
-    return await this.usersService.createUserBySuperAdmin(createUserDto, companyId);
+    try {
+      return await this.usersService.createUserBySuperAdmin(
+        createUserDto,
+        companyId,
+      );
+    } catch (error) {
+      throw error;
+    }
   }
-
 
   @Roles(Role.ADMIN)
   @Post('/CreateUserByAdmin')
-  async createUserByAdmin(
-    @Body() createUserDto: CreateUserDto,
-    @Req() req
-  ) {
-   const companyId= req.user.companyId;
-     return await this.usersService.createUserByAdmin(createUserDto, companyId);
+  async createUserByAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
+    try {
+      const companyId = req.user.companyId;
+      return await this.usersService.createUserByAdmin(
+        createUserDto,
+        companyId,
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
+  @Roles(Role.SUPER_ADMIN)
   @Get()
- async findAll() {
-    return await this.usersService.findAll();
+  async findAll() {
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      throw error;
+    }
   }
 
+  @Roles(Role.ADMIN)
+  @Get('findAllUserByAdmin')
+  async findAllByAdmin(@Req() req) {
+    try {
+      const companyId = req.user.companyId;
+
+      return await this.usersService.findAllByAdmin(companyId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/me')
+  async findme(@Req() req) {
+    try {
+      return req.user;
+    } catch (error) {
+      throw error;
+    }
+  }
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(+id);
+    try {
+      return await this.usersService.findOne(+id);
+    } catch (error) {
+      throw error;
+    }
   }
-
-
 }

@@ -14,16 +14,30 @@ export class CompaniesService {
   }
 
 async  create(createCompanyDto: CreateCompanyDto) {
+   try {
     return await this.companyRepository.save(createCompanyDto);
+   } catch (error) {
+    throw error;
+   } 
   }
 
   async findAll() {
+   try {
     return await this.companyRepository.find();
+    
+   } catch (error) {
+    throw error;
+   }
   }
 
   async findOne(id: number) {
+    try {
+      
     const company = await this.companyRepository.findOne({where:{id}});
-  return company;
+    return company;
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {

@@ -18,7 +18,8 @@ export class AuthService {
     private userService: UsersService,
   ) {}
   async login(loginDto: LoginUserDto) {
-
+try {
+  
     //validating email
     const result = await this.userService.findExistingByEmail(loginDto.email);
     if(result){
@@ -41,11 +42,16 @@ else {
       throw new BadRequestException('email/password incorrect');
     }
 
+  } catch (error) {
+  throw error;
+  }
     
   }
 
   async signinUser(data
   ) {
+    try {
+      
     const payload = {
       id: data.id,
       userName: data.userName,
@@ -56,13 +62,19 @@ else {
     return {
       access_token: this.jwtService.sign(payload),
     };
+    
+  } catch (error) {
+   throw error;   
+  }
   }
 
 
   async updatePassword(email: string, password) {
-
+try{
     const user = await this.userService.findOneByEmail(email);
     if (user) {
+      console.log("user",user);
+      
     //   const validations= await this.emailValidationService.verify(user.id);
     // if(validations){
       const results= await this.passwordservice.updatePassword(email, password);
@@ -76,9 +88,14 @@ else {
     else{
       throw new BadRequestException("this user does not exists");
     }
+    
+  } catch (error) {
+    throw error;   
+   }
   }
 
   async temporaryForgetPassword(email: string, password) {
+    try{
     const user = await this.userService.findOneByEmail(email);
     if (user) {
       const results= await this.passwordservice.updatePassword(email, password);
@@ -87,11 +104,19 @@ else {
     else{
       throw new BadRequestException("this user does not exists");
     }
+    
+  } catch (error) {
+    throw error;   
+   }
   }
 
   async forgetPassword(email: string) {
-    const user = await this.userService.findExistingByEmail(email);
+  try{  const user = await this.userService.findExistingByEmail(email);
     return await this.passwordservice.forgetPassword(user);
+  
+  } catch (error) {
+    throw error;   
+   }
   }
 
   

@@ -1,5 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import {  CreateUserDto } from './dto/create-userdto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { CreateUserDto } from './dto/create-userdto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,106 +17,147 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private companiesService:CompaniesService,
-    private passwordService:PasswordService,
+    private companiesService: CompaniesService,
+    private passwordService: PasswordService,
   ) {}
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+  async findAll() {
+    try {
+      const user = await this.usersRepository.find();
+      // Transform each user object to remove the password field
+      return user.map(({ password, ...user }) => user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllByAdmin(companyId) {
+    try {
+      const user = await this.usersRepository.find({
+        where: {
+          company: companyId,
+        },
+        relations: ['company'],
+      });
+      // Transform each user object to remove the password field
+      return user.map(({ password, ...user }) => user);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOne(id) {
-
-    const result = await this.usersRepository.findOne({
-      where: {
-        id: id,
-      },
-    }
-     );
-    if (result) {
-      return result;
-    } else {
-      throw new BadRequestException('User doesnt Exists');
+    try {
+      const user = await this.usersRepository.findOne({
+        where: {
+          id: id,
+        },
+        relations: ['company'],
+      });
+      if (user) {
+        // Destructure the password field and return the modified user object
+        const { password, ...modifiedUser } = user;
+        return modifiedUser;
+      } else {
+        throw new BadRequestException('User doesnt Exists');
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   async findExistingByEmail(email: string) {
-    const result = await this.usersRepository.findOne({
-      where: {
-        email: email,
-      },
-      relations:['company'],
-    });
-    if (result) {
-    
-      return result;
+    try {
+      const result = await this.usersRepository.findOne({
+        where: {
+          email: email,
+        },
+        relations: ['company'],
+      });
+      if (result) {
+        return result;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   async findOneByEmail(email: string) {
-    const result = await this.usersRepository.findOne({
-      where: {
-        email: email,
+    try {
+      const result = await this.usersRepository.findOne({
+        where: {
+          email: email,
+        },
+        relations: ['company'],
+      });
+      if (result) {
+        // Destructure the password field and return the modified user object
+        const { password, ...modifiedUser } = result;
+        return modifiedUser;
+      } else {
+        throw new BadRequestException('User doesnt Exists');
       }
-    });
-    if (result) {
-    
-      return result;
-    } else {
-      throw new BadRequestException('User doesnt Exists');
+    } catch (error) {
+      throw error;
     }
   }
-
 
   async createUserBySuperAdmin(
     createUserDto: CreateUserDto,
     companyId: number,
   ) {
-    const company = await this.companiesService.findOne(companyId);
-  
-    if (!company) {
-      throw new NotFoundException(`Company with ID ${companyId} not found`);
+    try {
+      const company = await this.companiesService.findOne(companyId);
+
+      if (!company) {
+        throw new NotFoundException(`Company with ID ${companyId} not found`);
+      } else {
+        const hash = await this.passwordService.hashPassword(
+          createUserDto.password,
+        );
+        createUserDto.password = hash;
+        const User = this.usersRepository.create({
+          ...createUserDto,
+          company: company, // Assign the company to the user
+        });
+        const user = await this.usersRepository.save(User);
+        // Destructure the password field and return the modified user object
+        const { password, ...modifiedUser } = user;
+        return modifiedUser;
+      }
+    } catch (error) {
+      throw error;
     }
-else{
-  const hash= await this.passwordService.hashPassword(createUserDto.password);
-  createUserDto.password=hash;
-    const User = this.usersRepository.create({
-      ...createUserDto,
-      company: company, // Assign the company to the user
-    });
-    return await this.usersRepository.save(User);
   }
-}
-  
- 
-async createUserByAdmin(
-  createUserDto: CreateUserDto,
-  companyId: number,
-): Promise<User> {
 
-  if(createUserDto.roles!=="user"){
-    throw new UnauthorizedException("Unauthorized To Create User With This Role.");
-    
+  async createUserByAdmin(createUserDto: CreateUserDto, companyId: number) {
+    try {
+      if (createUserDto.roles !== 'user') {
+        throw new UnauthorizedException(
+          'Unauthorized To Create User With This Role.',
+        );
+      } else {
+        const company = await this.companiesService.findOne(companyId);
+
+        if (!company) {
+          throw new NotFoundException(`Company with ID ${companyId} not found`);
+        } else {
+          const hash = await this.passwordService.hashPassword(
+            createUserDto.password,
+          );
+          createUserDto.password = hash;
+          const user = this.usersRepository.create({
+            ...createUserDto,
+            company: company, // Assign the company to the user
+          });
+          const user1 = await this.usersRepository.save(user);
+          // Destructure the password field and return the modified user object
+          const { password, ...modifiedUser } = user1;
+          return modifiedUser;
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
   }
-  else{
-  
-  const company = await this.companiesService.findOne(companyId);
-
-  if (!company) {
-    throw new NotFoundException(`Company with ID ${companyId} not found`);
-  }
-else{
-const hash= await this.passwordService.hashPassword(createUserDto.password);
-createUserDto.password=hash;
-  const user = this.usersRepository.create({
-    ...createUserDto,
-    company: company, // Assign the company to the user
-  });
-  return await this.usersRepository.save(user);
-}
-}
-
-}
-
-
 }

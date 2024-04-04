@@ -14,21 +14,24 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
-@Module(
-{
-  imports: [  
+@Module({
+  imports: [
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: 'password',
-    database: 'test',
-    entities: [User,Company],
-    synchronize: true,
-  }), 
-  TypeOrmModule.forFeature([User, Company]),
-  UsersModule, CompaniesModule, AuthModule,PasswordModule],
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT) ,
+      username: process.env.DATABASE_USERNAME ,
+      password: process.env.DATABASE_PASSWORD ,
+      database: process.env.DATABASE_NAME ,
+      entities: [User, Company],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([User, Company]),
+    UsersModule,
+    CompaniesModule,
+    AuthModule,
+    PasswordModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
@@ -50,7 +53,3 @@ import { RolesGuard } from './auth/guards/roles.guard';
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
-
-
-
-
