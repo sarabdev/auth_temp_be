@@ -21,10 +21,11 @@ import { Role } from './entities/user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  
   @Roles(Role.SUPER_ADMIN)
   @Post('/CreateUserBySuperAdmin')
   async create(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: CreateUserDto[],
     @Param('companyId') companyId: number,
   ) {
     try {
@@ -37,12 +38,26 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  // @Post('/CreateUserByAdmin')
+  // async createUserByAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
+  //   try {
+  //     const companyId = req.user.companyId;
+  //     return await this.usersService.createUserByAdmin(
+  //       createUserDto,
+  //       companyId,
+  //     );
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  @Roles(Role.AUTH_ADMIN)
   @Post('/CreateUserByAdmin')
-  async createUserByAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
+  async createUserByAuthAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
     try {
       const companyId = req.user.companyId;
-      return await this.usersService.createUserByAdmin(
+      return await this.usersService.createUserByAuthAdmin(
         createUserDto,
         companyId,
       );

@@ -14,6 +14,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { ApplicationsModule } from './applications/applications.module';
+import { Application } from './applications/entities/application.entity';
+import { ApplicationsService } from './applications/applications.service';
+import { ApplicationSeederModule } from './applications/application.seeder.module';
+import { ApplicationSeeder } from './applications/application.seeder';
+import { RolesModule } from './roles/roles.module';
+import { AccessModule } from './access/access.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -23,19 +30,30 @@ import { RolesGuard } from './auth/guards/roles.guard';
       username: process.env.DATABASE_USERNAME ,
       password: process.env.DATABASE_PASSWORD ,
       database: process.env.DATABASE_NAME ,
-      entities: [User, Company],
+      entities: [User, Company,Application],
       synchronize: true,
+      
     }),
-    TypeOrmModule.forFeature([User, Company]),
+    TypeOrmModule.forFeature([User, Company,Application]),
     UsersModule,
     CompaniesModule,
     AuthModule,
     PasswordModule,
+    ApplicationsModule,
+    ApplicationSeederModule,
+    RolesModule,
+    AccessModule,
   ],
   controllers: [AppController],
+
+
   providers: [
+    
+    ApplicationSeeder,
+    ApplicationsService,
     AppService,
     ConfigService,
+    
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
@@ -50,6 +68,10 @@ import { RolesGuard } from './auth/guards/roles.guard';
     },
   ],
 })
+
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
+  constructor(private readonly applicationSeeder: ApplicationSeeder) {
+    this.applicationSeeder.seed();
+  }
 }
+

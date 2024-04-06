@@ -26,4 +26,7 @@ export class CreateUserDto {
   @ApiProperty()
   @IsEnum(Role)
   roles: Role;
+
+  @ApiProperty()
+  applicationId:number;
 }

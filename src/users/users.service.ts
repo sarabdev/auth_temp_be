@@ -103,7 +103,7 @@ export class UsersService {
   }
 
   async createUserBySuperAdmin(
-    createUserDto: CreateUserDto,
+    createUserDto: CreateUserDto[],
     companyId: number,
   ) {
     try {
@@ -111,32 +111,31 @@ export class UsersService {
 
       if (!company) {
         throw new NotFoundException(`Company with ID ${companyId} not found`);
-      } else {
-        const hash = await this.passwordService.hashPassword(
-          createUserDto.password,
-        );
-        createUserDto.password = hash;
-        const User = this.usersRepository.create({
-          ...createUserDto,
-          company: company, // Assign the company to the user
-        });
-        const user = await this.usersRepository.save(User);
-        // Destructure the password field and return the modified user object
-        const { password, ...modifiedUser } = user;
-        return modifiedUser;
       }
+
+      const hashedUsers = await Promise.all(
+        createUserDto.map(async (dto) => {
+          const hash = await this.passwordService.hashPassword(dto.password);
+          return { ...dto, password: hash, company: company };
+        }),
+      );
+
+      const createdUsers = await this.usersRepository.save(hashedUsers);
+
+      // Destructure the password field and return the modified user objects
+      const modifiedUsers = createdUsers.map(({ password, ...user }) => user);
+
+      return modifiedUsers;
     } catch (error) {
       throw error;
     }
   }
 
+
   async createUserByAdmin(createUserDto: CreateUserDto, companyId: number) {
     try {
-      if (createUserDto.roles !== 'user') {
-        throw new UnauthorizedException(
-          'Unauthorized To Create User With This Role.',
-        );
-      } else {
+      if (createUserDto.roles === 'user'|| createUserDto.roles === 'telemarketer') {
+        
         const company = await this.companiesService.findOne(companyId);
 
         if (!company) {
@@ -156,8 +155,53 @@ export class UsersService {
           return modifiedUser;
         }
       }
+      else {
+      throw new UnauthorizedException(
+        'Unauthorized To Create User With This Role.',
+      );
+    } 
+
     } catch (error) {
       throw error;
     }
   }
+
+  async createUserByAuthAdmin(createUserDto: CreateUserDto, companyId: number) {
+    try {
+      if (createUserDto.roles === 'super_admin') {
+        throw new UnauthorizedException(
+          'Unauthorized To Create User With This Role.',
+        );
+      }
+      else {
+      
+        const company = await this.companiesService.findOne(companyId);
+
+        if (!company) {
+          throw new NotFoundException(`Company with ID ${companyId} not found`);
+        } else {
+          const hash = await this.passwordService.hashPassword(
+            createUserDto.password,
+          );
+          createUserDto.password = hash;
+          const user = this.usersRepository.create({
+            ...createUserDto,
+            company: company, // Assign the company to the user
+          });
+          const user1 = await this.usersRepository.save(user);
+          // Destructure the password field and return the modified user object
+          const { password, ...modifiedUser } = user1;
+          return modifiedUser;
+        }
+     
+    } 
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }
+
+
