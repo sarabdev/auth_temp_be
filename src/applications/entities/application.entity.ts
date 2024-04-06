@@ -1,5 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany ,JoinTable} from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Adjust the path as per your project structure
+import { Access } from 'src/access/entities/access.entity';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Entity()
 export class Application {
@@ -15,10 +17,17 @@ export class Application {
   @Column()
   logoUrl:string;
 
- 
-  @ManyToMany(() => User, user => user.applications)
+  @ManyToMany(() => User)
+  @JoinTable()
   users: User[];
 
+  @ManyToMany(() => Role)
+  @JoinTable()
+  roles: Role[];
+
+  @ManyToMany(() => Access)
+  @JoinTable()
+  access: Access[];
 
 }
 

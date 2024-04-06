@@ -14,7 +14,6 @@ import { CreateUserDto } from './dto/create-userdto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Roles } from 'src/auth/constants';
-import { Role } from './entities/user.entity';
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('users')
@@ -22,7 +21,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   
-  @Roles(Role.SUPER_ADMIN)
+  //@Roles(Role.SUPER_ADMIN)
   @Post('/CreateUserBySuperAdmin')
   async create(
     @Body() createUserDto: CreateUserDto[],
@@ -38,7 +37,7 @@ export class UsersController {
     }
   }
 
-  // @Roles(Role.ADMIN)
+  // //@Roles(Role.ADMIN)
   // @Post('/CreateUserByAdmin')
   // async createUserByAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
   //   try {
@@ -52,7 +51,7 @@ export class UsersController {
   //   }
   // }
 
-  @Roles(Role.AUTH_ADMIN)
+  //@Roles(Role.AUTH_ADMIN)
   @Post('/CreateUserByAdmin')
   async createUserByAuthAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
     try {
@@ -66,7 +65,7 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.SUPER_ADMIN)
+  //@Roles(Role.SUPER_ADMIN)
   @Get()
   async findAll() {
     try {
@@ -76,7 +75,7 @@ export class UsersController {
     }
   }
 
-  @Roles(Role.ADMIN)
+  //@Roles(Role.ADMIN)
   @Get('findAllUserByAdmin')
   async findAllByAdmin(@Req() req) {
     try {

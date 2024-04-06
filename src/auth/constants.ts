@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Role } from 'src/users/entities/user.entity';
+import { Role } from 'src/roles/entities/role.entity';
 require("dotenv").config();
 
 export const jwtConstants = {

@@ -21,6 +21,8 @@ import { ApplicationSeederModule } from './applications/application.seeder.modul
 import { ApplicationSeeder } from './applications/application.seeder';
 import { RolesModule } from './roles/roles.module';
 import { AccessModule } from './access/access.module';
+import { Access } from './access/entities/access.entity';
+import { Role } from './roles/entities/role.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -30,11 +32,11 @@ import { AccessModule } from './access/access.module';
       username: process.env.DATABASE_USERNAME ,
       password: process.env.DATABASE_PASSWORD ,
       database: process.env.DATABASE_NAME ,
-      entities: [User, Company,Application],
+      entities: [User, Company,Application,Access,Role],
       synchronize: true,
       
     }),
-    TypeOrmModule.forFeature([User, Company,Application]),
+    TypeOrmModule.forFeature([User, Company,Application,Access,Role]),
     UsersModule,
     CompaniesModule,
     AuthModule,

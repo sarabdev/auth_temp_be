@@ -134,7 +134,7 @@ export class UsersService {
 
   async createUserByAdmin(createUserDto: CreateUserDto, companyId: number) {
     try {
-      if (createUserDto.roles === 'user'|| createUserDto.roles === 'telemarketer') {
+      // if (createUserDto.roles === 'user'|| createUserDto.roles === 'telemarketer') {
         
         const company = await this.companiesService.findOne(companyId);
 
@@ -154,12 +154,12 @@ export class UsersService {
           const { password, ...modifiedUser } = user1;
           return modifiedUser;
         }
-      }
-      else {
-      throw new UnauthorizedException(
-        'Unauthorized To Create User With This Role.',
-      );
-    } 
+    //   }
+    //   else {
+    //   throw new UnauthorizedException(
+    //     'Unauthorized To Create User With This Role.',
+    //   );
+    // } 
 
     } catch (error) {
       throw error;
@@ -168,12 +168,12 @@ export class UsersService {
 
   async createUserByAuthAdmin(createUserDto: CreateUserDto, companyId: number) {
     try {
-      if (createUserDto.roles === 'super_admin') {
-        throw new UnauthorizedException(
-          'Unauthorized To Create User With This Role.',
-        );
-      }
-      else {
+      // if (createUserDto.roles === 'super_admin') {
+      //   throw new UnauthorizedException(
+      //     'Unauthorized To Create User With This Role.',
+      //   );
+      // }
+      // else {
       
         const company = await this.companiesService.findOne(companyId);
 
@@ -194,9 +194,10 @@ export class UsersService {
           return modifiedUser;
         }
      
-    } 
+    // } 
 
-    } catch (error) {
+    }
+     catch (error) {
       throw error;
     }
   }

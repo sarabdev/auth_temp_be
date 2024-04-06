@@ -3,7 +3,6 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Roles } from 'src/auth/constants';
-import { Role } from 'src/users/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Applications')
@@ -12,7 +11,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
-  @Roles(Role.SUPER_ADMIN)
+  // @Roles(Role.SUPER_ADMIN)
 @Post()
   create(@Body() createApplicationDto: CreateApplicationDto) {
     return this.applicationsService.create(createApplicationDto);
