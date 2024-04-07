@@ -1,18 +1,20 @@
-import {
-  Entity,
+import
+{
   Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  ManyToMany,
+  Entity,
   JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Access } from '../../access/entities/access.entity';
+import { Application } from '../../applications/entities/application.entity';
 import { Company } from '../../companies/entities/company.entity';
-import { Application } from 'src/applications/entities/application.entity';
-import { Access } from 'src/access/entities/access.entity';
-import { Role } from 'src/roles/entities/role.entity';
+import { Role } from '../../roles/entities/role.entity';
 
 @Entity()
-export class User {
+export class User
+{
   @PrimaryGeneratedColumn()
   id: number;
 

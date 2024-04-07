@@ -6,8 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PasswordService } from 'src/password/password.service';
 import { User } from 'src/users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { Access } from 'src/access/entities/access.entity';
+import { Application } from 'src/applications/entities/application.entity';
+import { Role } from 'src/roles/entities/role.entity';
 @Module({
-  imports: [  TypeOrmModule.forFeature([User, Company]),
+  imports: [  TypeOrmModule.forFeature([User, Company,Access,Application,Role]),
 ],
   controllers: [CompaniesController],
   providers: [CompaniesService,PasswordService,ConfigService],

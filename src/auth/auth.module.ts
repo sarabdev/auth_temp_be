@@ -1,22 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PasswordService } from 'src/password/password.service';
-import { UsersModule } from '../users/users.module';
-import { PassportModule } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Access } from 'src/access/entities/access.entity';
+import { Application } from 'src/applications/entities/application.entity';
+import { CompaniesService } from 'src/companies/companies.service';
+import { Company } from 'src/companies/entities/company.entity';
+import { PasswordService } from 'src/password/password.service';
+import { Role } from 'src/roles/entities/role.entity';
+import { RolesService } from 'src/roles/roles.service';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { UsersModule } from '../users/users.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { UsersService } from 'src/users/users.service';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { Company } from 'src/companies/entities/company.entity';
-import { CompaniesService } from 'src/companies/companies.service';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Company]),
+
+    TypeOrmModule.forFeature([User, Company, Access, Application, Role]),
     UsersModule,
     PassportModule,
     JwtModule.register({
@@ -31,6 +35,7 @@ import { CompaniesService } from 'src/companies/companies.service';
     JwtStrategy,
     UsersService,
     ConfigService,
+    RolesService
   ],
 })
-export class AuthModule {}
+export class AuthModule { }
