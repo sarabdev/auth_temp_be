@@ -12,14 +12,35 @@ export class RolesService
     @InjectRepository(Role)
     private rolesRepository: Repository<Role>,
   ) { }
-  create(createRoleDto: CreateRoleDto)
+ async create(createRoleDto: CreateRoleDto)
   {
-    return 'This action adds a new role';
+    try{
+ return await this.rolesRepository.save(createRoleDto);
+    }
+    catch(error){
+throw error;
+    }
   }
 
-  findAll()
+ async findAll()
   {
-    return `This action returns all roles`;
+    try
+    {
+      const role = await this.rolesRepository.find({
+       relations:{access:true}
+      });
+      if (role)
+      {
+
+        return role;
+      } else
+      {
+        throw new BadRequestException('Role doesnt Exists');
+      }
+    } catch (error)
+    {
+      throw error;
+    }
   }
 
   async findOne(id)
@@ -29,7 +50,9 @@ export class RolesService
       const role = await this.rolesRepository.findOne({
         where: {
           id: id,
-        }
+          
+        },
+        relations:{access:true}
       });
       if (role)
       {
@@ -46,13 +69,4 @@ export class RolesService
   }
 
 
-  update(id: number, updateRoleDto: UpdateRoleDto)
-  {
-    return `This action updates a #${id} role`;
-  }
-
-  remove(id: number)
-  {
-    return `This action removes a #${id} role`;
-  }
 }

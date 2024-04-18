@@ -8,7 +8,7 @@ import
   Req
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/constants';
+import { Public, Roles } from 'src/auth/constants';
 import { CreateUserDto } from './dto/create-userdto';
 import { UsersService } from './users.service';
 @ApiTags('User')
@@ -18,11 +18,10 @@ export class UsersController
 {
   constructor(private readonly usersService: UsersService) { }
 
-  @Public()
-  //@Roles(Role.SUPER_ADMIN)
+  @Roles('Super_Admin')
   @Post('/CreateUserBySuperAdmin')
   async create(
-    @Body() createUserDto: CreateUserDto[],
+    @Body() createUserDto: CreateUserDto,
     @Param('companyId') companyId: number,
   )
   {
@@ -52,7 +51,7 @@ export class UsersController
   //   }
   // }
 
-  //@Roles(Role.AUTH_ADMIN)
+  @Roles('Auth_Admin')
   @Post('/CreateUserByAdmin')
   async createUserByAuthAdmin(@Body() createUserDto: CreateUserDto, @Req() req)
   {
@@ -69,7 +68,7 @@ export class UsersController
     }
   }
 
-  //@Roles(Role.SUPER_ADMIN)
+  @Roles('Super_Admin')
   @Get()
   async findAll()
   {
@@ -82,7 +81,7 @@ export class UsersController
     }
   }
 
-  //@Roles(Role.ADMIN)
+  @Roles('Admin')
   @Get('findAllUserByAdmin')
   async findAllByAdmin(@Req() req)
   {
@@ -108,6 +107,7 @@ export class UsersController
       throw error;
     }
   }
+
   @Get(':id')
   async findOne(@Param('id') id: string)
   {

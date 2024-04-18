@@ -35,18 +35,13 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto, @Req() req) {
     try {
-      const referer = req.headers.referer;
+      // const referer = req.headers.referer;
 
-      const result = await this.authService.login(loginUserDto);
+  return await this.authService.login(loginUserDto);
       
-      if (result.user.roles === 'super_admin'|| result.user.roles === 'auth_admin')
-{
+      
   
-  return { acesstoken:result.access_token, refererurl:process.env.AUTH_URL };
-}
-else{
-  return { acesstoken:result.access_token, refererurl:referer };
-}
+
       
     } catch (error) {
       throw error;

@@ -11,36 +11,37 @@ import { UpdateApplicationDto } from './dto/update-application.dto';
 export class ApplicationsController
 {
   constructor(private readonly applicationsService: ApplicationsService) { }
-  // @Public()
-  // @Roles(Role.SUPER_ADMIN)
+
   @Roles('Super_Admin')
   @Post()
-  create(@Body() createApplicationDto: CreateApplicationDto)
+  async create(@Body() createApplicationDto: CreateApplicationDto)
   {
-    return this.applicationsService.create(createApplicationDto);
+    try{
+    return await this.applicationsService.create(createApplicationDto);
+  } catch (error) {
+    throw error;
+   } 
   }
 
   @Get()
-  findAll()
+ async findAll()
   {
-    return this.applicationsService.findAll();
-  }
+  try{
+    return await this.applicationsService.findAll();
+  } catch (error) {
+    throw error;
+   } 
+}
 
   @Get(':id')
-  findOne(@Param('id') id: string)
+  async findOne(@Param('id') id: string)
   {
-    return this.applicationsService.findOne(+id);
+    try{
+    return await this.applicationsService.findOne(+id);
+  } catch (error) {
+    throw error;
+   } 
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicationDto: UpdateApplicationDto)
-  {
-    return this.applicationsService.update(+id, updateApplicationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string)
-  {
-    return this.applicationsService.remove(+id);
-  }
+  
 }

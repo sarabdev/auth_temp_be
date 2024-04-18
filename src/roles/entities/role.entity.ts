@@ -15,14 +15,6 @@ export class Role
     @Column()
     description: string;
 
-    @ManyToMany(() => User)
-    @JoinTable()
-    users: User[];
-
-    @ManyToMany(() => Application)
-    @JoinTable()
-    applications: Application[];
-
     @ManyToMany(() => Access)
     @JoinTable()
     access: Access[];

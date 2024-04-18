@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
+import { Application } from './entities/application.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ApplicationsService {
-  create(createApplicationDto: CreateApplicationDto) {
-    return 'This action adds a new application';
+  constructor(
+    @InjectRepository(Application)
+    private applicationRepository: Repository<Application>,
+  ) {}
+
+  async create(createApplicationDto: CreateApplicationDto) {
+    try {
+      return await this.applicationRepository.create(createApplicationDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all applications`;
+  async findAll() {
+    try {
+      const application = await this.applicationRepository.find();
+      if (application) {
+        return application;
+      } else {
+        throw new BadRequestException('Application doesnt Exists');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
-  }
-
-  update(id: number, updateApplicationDto: UpdateApplicationDto) {
-    return `This action updates a #${id} application`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} application`;
+  async findOne(id) {
+    try {
+      const application = await this.applicationRepository.findOne({
+        where: {
+          id: id,
+        },
+      });
+      if (application) {
+        return application;
+      } else {
+        throw new BadRequestException('Application doesnt Exists');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }

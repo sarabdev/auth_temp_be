@@ -10,9 +10,9 @@ import { Access } from 'src/access/entities/access.entity';
 import { Application } from 'src/applications/entities/application.entity';
 import { Role } from 'src/roles/entities/role.entity';
 @Module({
-  imports: [  TypeOrmModule.forFeature([User, Company,Access,Application,Role]),
+  imports: [  TypeOrmModule.forFeature([ Company,Access,Application,Role]),
 ],
   controllers: [CompaniesController],
-  providers: [CompaniesService,PasswordService,ConfigService],
+  providers: [CompaniesService],
 })
 export class CompaniesModule {}

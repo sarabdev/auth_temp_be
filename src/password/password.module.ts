@@ -16,8 +16,8 @@ import { PasswordController } from './password.controller';
 import { PasswordService } from './password.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Company, Access, Application, Role])],
+  imports: [TypeOrmModule.forFeature([User,Company, Access, Application, Role])],
   controllers: [PasswordController],
-  providers: [PasswordService, ConfigService, UsersService, AuthService, CompaniesService, JwtService, RolesService],
+  providers: [PasswordService, ConfigService],
 })
 export class PasswordModule { }

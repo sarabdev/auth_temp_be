@@ -17,14 +17,6 @@ export class Application {
   @Column()
   logoUrl:string;
 
-  @ManyToMany(() => User)
-  @JoinTable()
-  users: User[];
-
-  @ManyToMany(() => Role)
-  @JoinTable()
-  roles: Role[];
-
   @ManyToMany(() => Access)
   @JoinTable()
   access: Access[];

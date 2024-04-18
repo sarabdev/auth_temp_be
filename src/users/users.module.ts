@@ -12,14 +12,13 @@ import { CompaniesModule } from '../companies/companies.module'; // Import the m
 import { User } from './entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { AccessService } from '../access/access.service';
+import { ApplicationsService } from 'src/applications/applications.service';
 // Import the CompanyRepository
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, Company, Access, Application, Role]),
-    CompaniesModule, // Import the module providing CompanyRepository
-  ],
+  imports: [TypeOrmModule.forFeature([User, Company, Access, Application, Role])],
   controllers: [UsersController],
-  providers: [UsersService, CompaniesService, PasswordService, ConfigService, RolesService], // Add CompanyRepository to the providers array
+  providers: [UsersService,  PasswordService,AccessService, ConfigService, RolesService,CompaniesService,ApplicationsService], 
 })
 export class UsersModule { }

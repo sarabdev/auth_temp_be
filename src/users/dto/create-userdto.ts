@@ -1,10 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import
 {
+  IsArray,
   IsEmail,
-  IsNotEmpty
+  IsNotEmpty,
+  ValidateNested
 } from 'class-validator';
 // import { Role } from '../entities/user.entity';
+
+class UserObject {
+  @IsNotEmpty()
+  @ApiProperty()
+  role_id: number;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  application_id: number;
+}
+
 
 export class CreateUserDto
 {
@@ -22,9 +35,9 @@ export class CreateUserDto
   @ApiProperty()
   password: string;
 
-  @ApiProperty()
-  role_id: number;
-
-  @ApiProperty()
-  applicationId: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ApiProperty({ type: [UserObject] })
+  access: UserObject[];
+  
 }

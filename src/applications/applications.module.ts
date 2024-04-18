@@ -9,7 +9,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Application } from './entities/application.entity';
 
 @Module({
-  imports: [  TypeOrmModule.forFeature([User, Company,Access,Application,Role]),
+  imports: [  TypeOrmModule.forFeature([ Company,Access,Application,Role]),
 ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService],
