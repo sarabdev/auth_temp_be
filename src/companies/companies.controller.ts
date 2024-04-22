@@ -17,8 +17,8 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
-  // @Public()
-  @Roles('Super_Admin')
+  @Public()
+  // @Roles('Super_Admin')
   @Post()
   async create(@Body() createCompanyDto: CreateCompanyDto) {
     try {
@@ -29,6 +29,7 @@ export class CompaniesController {
   }
 
   //@Roles(Role.SUPER_ADMIN)
+  @Public()
   @Get()
   async findAll() {
     try {

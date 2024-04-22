@@ -18,4 +18,7 @@ export class CreateCompanyDto {
     @IsNotEmpty()
     @ApiProperty()
     logoUrl:string;
+
+    @ApiProperty()
+    applicationIds: number[];
 }

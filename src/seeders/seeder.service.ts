@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Application } from 'src/applications/entities/application.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import { Repository } from 'typeorm';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class SeederService
@@ -12,6 +13,7 @@ export class SeederService
     private readonly applicationRepository: Repository<Application>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    private usersService:UsersService,
   ) { }
 
   async seed()
@@ -60,6 +62,24 @@ export class SeederService
       }
 
       console.log('Roles seeded successfully');
+
+
+  // Define your user data
+  const userData = {
+    "email": "superAdmin@gmail.com",
+    "userName": "Super_Admin",
+    "password": "Su",
+    "access": [
+      {
+        "role_id": 1,
+        "application_id": 1
+      }
+    ]
+  }
+
+ await this.usersService.createSuperAdmin(userData);
+
+ console.log('Super_Admin seeded successfully');
     } catch (error)
     {
       console.error('Error seeding roles:', error);

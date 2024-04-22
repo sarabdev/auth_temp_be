@@ -172,9 +172,7 @@ export class UsersService {
     try {
       const company = await this.companiesService.findOne(companyId);
 
-      if (!company) {
-        throw new NotFoundException(`Company with ID ${companyId} not found`);
-      }
+   
 
       if (!company) {
         throw new NotFoundException(`Company with ID ${companyId} not found`);
@@ -189,6 +187,51 @@ export class UsersService {
         userName: createUserDto.userName,
         password: hash,
         company: company,
+      };
+
+      const createdUser = await this.usersRepository.save(data);
+      let createAccess;
+      const createdAccessArray = [];
+      for (let i = 0; i < createUserDto.access.length; i++) {
+        const element = createUserDto.access[i];
+
+        let acessData = {
+          user_id: createdUser.id,
+          role_id: element.role_id,
+          application_id: element.application_id,
+        };
+        createAccess = await this.accessService.create(acessData);
+
+        createdAccessArray.push(createAccess);
+      }
+
+      createdUser.access = createdAccessArray;
+      // Update user data with access array
+      const updatedUser = await this.usersRepository.save(createdUser);
+
+      // Destructure the password field and return the modified user objects
+      ({ password, ...updatedUser }) => updatedUser;
+
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async createSuperAdmin(
+    createUserDto: CreateUserDto
+  ) {
+    try {
+
+      const hash = await this.passwordService.hashPassword(
+        createUserDto.password,
+      );
+
+      const data = {
+        email: createUserDto.email,
+        userName: createUserDto.userName,
+        password: hash,
       };
 
       const createdUser = await this.usersRepository.save(data);

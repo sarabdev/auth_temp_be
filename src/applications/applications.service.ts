@@ -33,6 +33,21 @@ export class ApplicationsService {
     }
   }
 
+  async findByApplicationIds(applicationIds) {
+    try {
+      const applications = await this.applicationRepository.findByIds(applicationIds);
+
+      
+      if (applications) {
+        return applications;
+      } else {
+        throw new BadRequestException('Applications doesnt Exists');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findOne(id) {
     try {
       const application = await this.applicationRepository.findOne({

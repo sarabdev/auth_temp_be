@@ -9,10 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import { Access } from 'src/access/entities/access.entity';
 import { Application } from 'src/applications/entities/application.entity';
 import { Role } from 'src/roles/entities/role.entity';
+import { ApplicationsService } from 'src/applications/applications.service';
 @Module({
   imports: [  TypeOrmModule.forFeature([ Company,Access,Application,Role]),
 ],
   controllers: [CompaniesController],
-  providers: [CompaniesService],
+  providers: [CompaniesService,ApplicationsService],
 })
 export class CompaniesModule {}
