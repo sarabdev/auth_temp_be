@@ -8,12 +8,13 @@ export class Company {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column()
   address: string;
 
+  @Column({ unique: true })
   @Column()
   url:string;
 
@@ -22,7 +23,7 @@ export class Company {
 
   @OneToMany(() => User, user => user.company)
   users?: User[];
-  
+
   @OneToMany(() => Application, application => application.company)
   applications: Application[];
 }

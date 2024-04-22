@@ -45,14 +45,25 @@ export class AuthService {
     try {
       let rolesArray = data.access.map((element) => element.roles).flat();
       let roleNames = rolesArray.map((role) => role.name);
-
-      const payload = {
+      let payload;
+if(data.company){
+       payload = {
         id: data.id,
         userName: data.userName,
         roles: roleNames,
         email: data.email,
         companyId: data.company.id,
       };
+    }
+    else{
+      payload = {
+        id: data.id,
+        userName: data.userName,
+        roles: roleNames,
+        email: data.email,
+        companyId: 0,
+      };
+    }
       return {
         access_token: this.jwtService.sign(payload),
         user: data,

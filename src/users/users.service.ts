@@ -97,14 +97,13 @@ export class UsersService {
         where: {
           id: id,
         },
-        relations:{
-          company:true,
-        access: {
+        relations: {
+          company: true,
+          access: {
             roles: true,
-            applications:true,
+            applications: true,
           },
-        }
-        
+        },
       });
       if (user) {
         return user;
@@ -131,7 +130,6 @@ export class UsersService {
         },
       });
       if (result) {
-        
         return result;
       }
     } catch (error) {
@@ -145,13 +143,13 @@ export class UsersService {
         where: {
           email: email,
         },
-        relations:{
-          company:true,
-        access: {
+        relations: {
+          company: true,
+          access: {
             roles: true,
-            applications:true,
+            applications: true,
           },
-        }
+        },
       });
       if (result) {
         // Destructure the password field and return the modified user object
@@ -170,94 +168,54 @@ export class UsersService {
     companyId: number,
   ) {
     try {
-      const company = await this.companiesService.findOne(companyId);
+      const existingUser = await this.findExistingByEmail(createUserDto.email);
+      if (existingUser) {
+        throw new BadRequestException(
+          'A user with this Email Adress Already Exists',
+        );
+      } else {
+        const company = await this.companiesService.findOne(companyId);
 
-   
+        if (!company) {
+          throw new NotFoundException(`Company with ID ${companyId} not found`);
+        }
 
-      if (!company) {
-        throw new NotFoundException(`Company with ID ${companyId} not found`);
-      }
+        const hash = await this.passwordService.hashPassword(
+          createUserDto.password,
+        );
 
-      const hash = await this.passwordService.hashPassword(
-        createUserDto.password,
-      );
-
-      const data = {
-        email: createUserDto.email,
-        userName: createUserDto.userName,
-        password: hash,
-        company: company,
-      };
-
-      const createdUser = await this.usersRepository.save(data);
-      let createAccess;
-      const createdAccessArray = [];
-      for (let i = 0; i < createUserDto.access.length; i++) {
-        const element = createUserDto.access[i];
-
-        let acessData = {
-          user_id: createdUser.id,
-          role_id: element.role_id,
-          application_id: element.application_id,
+        const data = {
+          email: createUserDto.email,
+          userName: createUserDto.userName,
+          password: hash,
+          company: company,
         };
-        createAccess = await this.accessService.create(acessData);
 
-        createdAccessArray.push(createAccess);
+        const createdUser = await this.usersRepository.save(data);
+        let createAccess;
+        const createdAccessArray = [];
+        for (let i = 0; i < createUserDto.access.length; i++) {
+          const element = createUserDto.access[i];
+
+          let acessData = {
+            user_id: createdUser.id,
+            role_id: element.role_id,
+            application_id: element.application_id,
+          };
+          createAccess = await this.accessService.create(acessData);
+
+          createdAccessArray.push(createAccess);
+        }
+
+        createdUser.access = createdAccessArray;
+        // Update user data with access array
+        const updatedUser = await this.usersRepository.save(createdUser);
+
+        // Destructure the password field and return the modified user objects
+        ({ password, ...updatedUser }) => updatedUser;
+
+        return updatedUser;
       }
-
-      createdUser.access = createdAccessArray;
-      // Update user data with access array
-      const updatedUser = await this.usersRepository.save(createdUser);
-
-      // Destructure the password field and return the modified user objects
-      ({ password, ...updatedUser }) => updatedUser;
-
-      return updatedUser;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-
-  async createSuperAdmin(
-    createUserDto: CreateUserDto
-  ) {
-    try {
-
-      const hash = await this.passwordService.hashPassword(
-        createUserDto.password,
-      );
-
-      const data = {
-        email: createUserDto.email,
-        userName: createUserDto.userName,
-        password: hash,
-      };
-
-      const createdUser = await this.usersRepository.save(data);
-      let createAccess;
-      const createdAccessArray = [];
-      for (let i = 0; i < createUserDto.access.length; i++) {
-        const element = createUserDto.access[i];
-
-        let acessData = {
-          user_id: createdUser.id,
-          role_id: element.role_id,
-          application_id: element.application_id,
-        };
-        createAccess = await this.accessService.create(acessData);
-
-        createdAccessArray.push(createAccess);
-      }
-
-      createdUser.access = createdAccessArray;
-      // Update user data with access array
-      const updatedUser = await this.usersRepository.save(createdUser);
-
-      // Destructure the password field and return the modified user objects
-      ({ password, ...updatedUser }) => updatedUser;
-
-      return updatedUser;
     } catch (error) {
       throw error;
     }
@@ -272,51 +230,57 @@ export class UsersService {
       // }
       // else {
 
-      const company = await this.companiesService.findOne(companyId);
-
-      if (!company) {
-        throw new NotFoundException(`Company with ID ${companyId} not found`);
-      } else {
-        const hash = await this.passwordService.hashPassword(
-          createUserDto.password,
+      const existingUser = await this.findExistingByEmail(createUserDto.email);
+      if (existingUser) {
+        throw new BadRequestException(
+          'A user with this Email Adress Already Exists',
         );
-        createUserDto.password = hash;
+      } else {
+        const company = await this.companiesService.findOne(companyId);
 
-        const data = {
-          email: createUserDto.email,
-          userName: createUserDto.userName,
-          password: hash,
-          company: company,
-        };
-  
-        const createdUser = await this.usersRepository.save(data);
-        let createAccess;
-        const createdAccessArray = [];
-        for (let i = 0; i < createUserDto.access.length; i++) {
-          const element = createUserDto.access[i];
-  
-          let acessData = {
-            user_id: createdUser.id,
-            role_id: element.role_id,
-            application_id: element.application_id,
+        if (!company) {
+          throw new NotFoundException(`Company with ID ${companyId} not found`);
+        } else {
+          const hash = await this.passwordService.hashPassword(
+            createUserDto.password,
+          );
+          createUserDto.password = hash;
+
+          const data = {
+            email: createUserDto.email,
+            userName: createUserDto.userName,
+            password: hash,
+            company: company,
           };
-          createAccess = await this.accessService.create(acessData);
-  
-          createdAccessArray.push(createAccess);
+
+          const createdUser = await this.usersRepository.save(data);
+          let createAccess;
+          const createdAccessArray = [];
+          for (let i = 0; i < createUserDto.access.length; i++) {
+            const element = createUserDto.access[i];
+
+            let acessData = {
+              user_id: createdUser.id,
+              role_id: element.role_id,
+              application_id: element.application_id,
+            };
+            createAccess = await this.accessService.create(acessData);
+
+            createdAccessArray.push(createAccess);
+          }
+
+          createdUser.access = createdAccessArray;
+          // Update user data with access array
+          const updatedUser = await this.usersRepository.save(createdUser);
+
+          // Destructure the password field and return the modified user objects
+          ({ password, ...updatedUser }) => updatedUser;
+
+          return updatedUser;
         }
-  
-        createdUser.access = createdAccessArray;
-        // Update user data with access array
-        const updatedUser = await this.usersRepository.save(createdUser);
-  
-        // Destructure the password field and return the modified user objects
-        ({ password, ...updatedUser }) => updatedUser;
-  
-        return updatedUser;
       }
     } catch (error) {
-        throw error;
-      }
-      
+      throw error;
+    }
   }
 }

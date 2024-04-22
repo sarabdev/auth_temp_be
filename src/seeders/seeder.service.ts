@@ -4,24 +4,22 @@ import { Application } from 'src/applications/entities/application.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
+import { CompaniesService } from 'src/companies/companies.service';
 
 @Injectable()
-export class SeederService
-{
+export class SeederService {
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    private usersService:UsersService,
-  ) { }
+    private usersService: UsersService,
+    private companiesService: CompaniesService,
+  ) {}
 
-  async seed()
-  {
-
-
-    try
-    {
+  async seed() {
+    try {
+      // Seed applications
       const applicationsData = [
         { name: 'EMS', url: 'http://EMS.com/', logoUrl: 'http://Ems.com/Ems_logo.png' },
         { name: 'Samodrie', url: 'http://Samodrie.com/', logoUrl: 'http://Samodrie.com/app2_logo.png' },
@@ -29,32 +27,26 @@ export class SeederService
         { name: 'PHARMACY_PORTAL', url: 'http://PHARMACY_PORTAL.com/', logoUrl: 'http://PHARMACY_PORTAL.com/app4_logo.png' },
       ];
 
-      for (const applicationData of applicationsData)
-      {
+      for (const applicationData of applicationsData) {
         const application = new Application();
         application.name = applicationData.name;
         application.url = applicationData.url;
         application.logoUrl = applicationData.logoUrl;
-        await this.applicationRepository.save(application); // Save the role
+        await this.applicationRepository.save(application); // Save the application
       }
 
+      console.log('Applications seeded successfully');
 
-
-      console.log("Application Seeded Sucessfully");
-
-      // Define your role data
+      // Seed roles
       const rolesData = [
         { name: 'Super_Admin', description: 'Description of Super_Admin' },
         { name: 'Auth_Admin', description: 'Description of Auth_Admin' },
         { name: 'Admin', description: 'Description of Admin' },
         { name: 'User', description: 'Description of User' },
         { name: 'Tele_Marketer', description: 'Description of Tele_Marketer' },
-        // Add more role data as needed
       ];
 
-      // Loop through the role data and create roles
-      for (const roleData of rolesData)
-      {
+      for (const roleData of rolesData) {
         const role = new Role();
         role.name = roleData.name;
         role.description = roleData.description;
@@ -63,26 +55,37 @@ export class SeederService
 
       console.log('Roles seeded successfully');
 
+      // Seed companies
+      const companyData = {
+        name: 'AuthCompany',
+        address: 'AuthCompany.com',
+        url: 'AuthCompany.com',
+        logoUrl: 'AuthCompany.com',
+        applicationIds: [1, 2, 3, 4],
+      };
 
-  // Define your user data
-  const userData = {
-    "email": "superAdmin@gmail.com",
-    "userName": "Super_Admin",
-    "password": "Su",
-    "access": [
-      {
-        "role_id": 1,
-        "application_id": 1
-      }
-    ]
-  }
+      const company = await this.companiesService.create(companyData);
 
- await this.usersService.createSuperAdmin(userData);
+      console.log('Auth Company seeded successfully');
 
- console.log('Super_Admin seeded successfully');
-    } catch (error)
-    {
-      console.error('Error seeding roles:', error);
+      // Define your user data
+      const userData = {
+        email: 'superAdmin@gmail.com',
+        userName: 'Super_Admin',
+        password: 'Super123',
+        access: [
+          {
+            role_id: 1,
+            application_id: 1,
+          },
+        ],
+      };
+
+      await this.usersService.createUserBySuperAdmin(userData, company.id);
+
+      console.log('Super_Admin seeded successfully');
+    } catch (error) {
+      console.error('Error seeding data:', error);
     }
   }
 }

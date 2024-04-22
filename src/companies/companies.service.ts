@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entity';
@@ -18,28 +18,37 @@ export class CompaniesService {
   async create(createCompanyDto: CreateCompanyDto) {
     try {
       const { name, address, url, logoUrl, applicationIds } = createCompanyDto;
+      const existingCompany = await this.companyRepository.findOne({
+        where: {
+          name: name,
+          url: url,
+        },
+      });
 
-      // Create a new company instance
-      const company = new Company();
-      company.name = name;
-      company.address = address;
-      company.url = url;
-      company.logoUrl = logoUrl;
+      if (existingCompany) {
+        throw new BadRequestException("This Company Name is Already Reserved");
+      } else {
+        // Create a new company instance
+        const company = new Company();
+        company.name = name;
+        company.address = address;
+        company.url = url;
+        company.logoUrl = logoUrl;
 
-      // Find applications by IDs
-      const applications =
-        await this.applicationsService.findByApplicationIds(applicationIds);
+        // Find applications by IDs
+        const applications =
+          await this.applicationsService.findByApplicationIds(applicationIds);
 
-      // Assign applications to the company
-      company.applications = applications;
+        // Assign applications to the company
+        company.applications = applications;
 
-      // Save the company to the database
-      return this.companyRepository.save(company);
+        // Save the company to the database
+        return this.companyRepository.save(company);
+      }
     } catch (error) {
       throw error;
     }
   }
-
 
   async findAll() {
     try {
