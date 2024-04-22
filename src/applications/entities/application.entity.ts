@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany,ManyToOne ,JoinTable} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Adjust the path as per your project structure
 import { Access } from 'src/access/entities/access.entity';
 import { Role } from 'src/roles/entities/role.entity';
@@ -18,8 +18,11 @@ export class Application {
   @Column()
   logoUrl:string;
 
-  @ManyToMany(() => Access)
-  @JoinTable()
+  // @ManyToMany(() => Access)
+  // @JoinTable()
+  // access: Access[];
+
+  @OneToMany(() => Access, access => access.application)
   access: Access[];
 
   @ManyToOne(() => Company, company => company.applications)

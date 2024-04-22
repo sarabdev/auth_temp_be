@@ -43,7 +43,8 @@ export class AuthService {
 
   async signinUser(data) {
     try {
-      let rolesArray = data.access.map((element) => element.roles).flat();
+      
+      let rolesArray = data.access.map((element) => element.role).flat();
       let roleNames = rolesArray.map((role) => role.name);
       let payload;
 if(data.company){
@@ -77,7 +78,6 @@ if(data.company){
     try {
       const user = await this.userService.findOneByEmail(email);
       if (user) {
-        console.log('user', user);
 
         //   const validations= await this.emailValidationService.verify(user.id);
         // if(validations){

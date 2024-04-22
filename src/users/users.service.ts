@@ -31,8 +31,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });
@@ -53,8 +53,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });
@@ -74,8 +74,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });
@@ -100,8 +100,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });
@@ -124,8 +124,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });
@@ -146,8 +146,8 @@ export class UsersService {
         relations: {
           company: true,
           access: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           },
         },
       });

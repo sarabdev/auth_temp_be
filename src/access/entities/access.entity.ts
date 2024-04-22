@@ -19,11 +19,11 @@ export class Access {
   @ManyToMany(() => User, (user) => user.access, { cascade: true })
   user: User[];
 
-  @ManyToMany(() => Application)
-  @JoinTable()
-  applications: Application[];
+  @ManyToOne(() => Application, application => application.access)
+  application: Application;
 
-  @ManyToMany(() => Role)
-  @JoinTable()
-  roles: Role[];
+  
+  @ManyToOne(() => Role, role => role.access)
+  role: Role;
+
 }

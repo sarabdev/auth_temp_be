@@ -37,8 +37,8 @@ export class AccessService {
 
   let access= new Access();
     access.user = [user]; 
-    access.applications = [application]; 
-    access.roles = [role]; 
+    access.application = application; 
+    access.role = role; 
 
       return await this.accessRepository.save(access);
      } catch (error) {
@@ -52,8 +52,8 @@ export class AccessService {
       const access = await this.accessRepository.find({
 
         relations: {
-            roles: true,
-            applications: true,
+            role: true,
+            application: true,
           user:true
         },
       });
@@ -71,8 +71,8 @@ export class AccessService {
         },
         relations: {
           user:true ,
-          roles: true,
-            applications: true,
+          role: true,
+            application: true,
           
         },
       });
