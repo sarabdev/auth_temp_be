@@ -78,6 +78,18 @@ export class SeederService {
             role_id: 1,
             application_id: 1,
           },
+          {
+            role_id: 1,
+            application_id: 2,
+          },
+          {
+            role_id: 1,
+            application_id: 3,
+          },
+          {
+            role_id: 1,
+            application_id: 4,
+          },
         ],
       };
 

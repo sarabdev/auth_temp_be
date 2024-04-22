@@ -203,6 +203,7 @@ export class UsersService {
             application_id: element.application_id,
           };
           createAccess = await this.accessService.create(acessData);
+console.log("createAcess",createAccess);
 
           createdAccessArray.push(createAccess);
         }
