@@ -101,7 +101,7 @@ export class UsersController
   {
     try
     {
-      return req.user;
+      return await this.usersService.findOne(req.user.id)
     } catch (error)
     {
       throw error;
