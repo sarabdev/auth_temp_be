@@ -68,4 +68,13 @@ export class CompaniesService {
       throw error;
     }
   }
+
+  async findMyCompanies(id: number) {
+    try {
+      const company = await this.companyRepository.find({ where: { id } });
+      return company;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

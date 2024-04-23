@@ -28,7 +28,7 @@ import { ApplicationsService } from 'src/applications/applications.service';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1w' },
     }),
   ],
   controllers: [AuthController],

@@ -14,12 +14,11 @@ export class Company {
   @Column()
   address: string;
 
-  @Column({ unique: true })
-  @Column()
-  url:string;
+  @Column({ unique: true, nullable: true }) // Making url optional
+  url?: string;
 
-  @Column()
-  logoUrl:string;
+  @Column({ nullable: true }) // Making logoUrl optional
+  logoUrl?: string;
 
   @OneToMany(() => User, user => user.company)
   users?: User[];

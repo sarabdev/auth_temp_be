@@ -21,11 +21,12 @@ export class SeederService {
     try {
       // Seed applications
       const applicationsData = [
+        { name: 'AUTH', url: 'http://Auth.com/', logoUrl: 'http://Auth.com/app5_logo.png' },
         { name: 'EMS', url: 'http://EMS.com/', logoUrl: 'http://Ems.com/Ems_logo.png' },
         { name: 'Samodrie', url: 'http://Samodrie.com/', logoUrl: 'http://Samodrie.com/app2_logo.png' },
         { name: 'ASCThem', url: 'http://ASCTHEM.com/', logoUrl: 'http://ASCTHEM.com/ASCTHEM_logo.png' },
         { name: 'PHARMACY_PORTAL', url: 'http://PHARMACY_PORTAL.com/', logoUrl: 'http://PHARMACY_PORTAL.com/app4_logo.png' },
-        { name: 'AUTH', url: 'http://Auth.com/', logoUrl: 'http://Auth.com/app5_logo.png' },
+       
       ];
 
       for (const applicationData of applicationsData) {
@@ -62,7 +63,7 @@ export class SeederService {
         address: 'AuthCompany.com',
         url: 'AuthCompany.com',
         logoUrl: 'AuthCompany.com',
-        applicationIds: [1, 2, 3, 4],
+        applicationIds: [1, 2, 3, 4,5],
       };
 
       const company = await this.companiesService.create(companyData);
@@ -90,6 +91,10 @@ export class SeederService {
           {
             role_id: 1,
             application_id: 4,
+          },
+          {
+            role_id: 1,
+            application_id: 5,
           },
         ],
       };

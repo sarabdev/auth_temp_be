@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Request,
   Param,
   Patch,
   Post,
@@ -49,5 +50,14 @@ export class CompaniesController {
     }
   }
 
+  @Get('/FindMyComppany:id')
+  async findMyCompany(@Request() req) {
+    try {
+      return req.user.company;
+      // return await this.companiesService.findOne(req.user.id);
+    } catch (error) {
+      throw error;
+    }
+  }
  
 }
