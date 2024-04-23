@@ -25,7 +25,9 @@ export class Application {
   @OneToMany(() => Access, access => access.application)
   access: Access[];
 
-  @ManyToOne(() => Company, company => company.applications)
-  company: Company;
+  @ManyToMany(() => Company)
+  company: Company[];
+  // @ManyToOne(() => Company, company => company.applications)
+  // company: Company;
 }
 

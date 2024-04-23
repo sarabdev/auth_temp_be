@@ -22,7 +22,9 @@ export class ApplicationsService {
 
   async findAll() {
     try {
-      const application = await this.applicationRepository.find();
+      const application = await this.applicationRepository.find({
+       
+      });
       if (application) {
         return application;
       } else {
@@ -54,6 +56,7 @@ export class ApplicationsService {
         where: {
           id: id,
         },
+       
       });
       if (application) {
         return application;

@@ -26,7 +26,7 @@ export class CompaniesService {
       });
 
       if (existingCompany) {
-        throw new BadRequestException("This Company Name is Already Reserved");
+        throw new BadRequestException('This Company Name is Already Reserved');
       } else {
         // Create a new company instance
         const company = new Company();
@@ -41,6 +41,7 @@ export class CompaniesService {
 
         // Assign applications to the company
         company.applications = applications;
+        console.log('applications', applications);
 
         // Save the company to the database
         return this.companyRepository.save(company);
@@ -62,7 +63,10 @@ export class CompaniesService {
 
   async findOne(id: number) {
     try {
-      const company = await this.companyRepository.findOne({ where: { id } });
+      const company = await this.companyRepository.findOne({
+        where: { id },
+        relations: ['applications'],
+      });
       return company;
     } catch (error) {
       throw error;
@@ -71,7 +75,10 @@ export class CompaniesService {
 
   async findMyCompanies(id: number) {
     try {
-      const company = await this.companyRepository.find({ where: { id } });
+      const company = await this.companyRepository.find({
+        where: { id },
+        relations: ['applications'],
+      });
       return company;
     } catch (error) {
       throw error;
