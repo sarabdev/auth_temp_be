@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Req,Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/constants';
 import { ApplicationsService } from './applications.service';
@@ -32,6 +32,16 @@ export class ApplicationsController
     throw error;
    } 
 }
+
+@Get('findMyApplications')
+  async findMyApplications(@Req() req)
+  {
+    try{
+    return await this.applicationsService.findMyApplications(req.user.id);
+  } catch (error) {
+    throw error;
+   } 
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string)

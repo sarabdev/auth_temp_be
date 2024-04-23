@@ -35,6 +35,22 @@ export class ApplicationsService {
     }
   }
 
+
+  async findMyApplications(id) {
+    try {
+      const application = await this.applicationRepository.find({
+        where: { access: { user:{id: id } },}
+      });
+      if (application) {
+        return application;
+      } else {
+        throw new BadRequestException('Application doesnt Exists');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findByApplicationIds(applicationIds) {
     try {
       const applications = await this.applicationRepository.findByIds(applicationIds);
