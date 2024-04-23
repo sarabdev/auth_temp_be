@@ -23,8 +23,9 @@ export class SeederService {
       const applicationsData = [
         { name: 'EMS', url: 'http://EMS.com/', logoUrl: 'http://Ems.com/Ems_logo.png' },
         { name: 'Samodrie', url: 'http://Samodrie.com/', logoUrl: 'http://Samodrie.com/app2_logo.png' },
-        { name: 'AUTH', url: 'http://ASCTHEM.com/', logoUrl: 'http://ASCTHEM.com/ASCTHEM_logo.png' },
+        { name: 'ASCThem', url: 'http://ASCTHEM.com/', logoUrl: 'http://ASCTHEM.com/ASCTHEM_logo.png' },
         { name: 'PHARMACY_PORTAL', url: 'http://PHARMACY_PORTAL.com/', logoUrl: 'http://PHARMACY_PORTAL.com/app4_logo.png' },
+        { name: 'AUTH', url: 'http://Auth.com/', logoUrl: 'http://Auth.com/app5_logo.png' },
       ];
 
       for (const applicationData of applicationsData) {
