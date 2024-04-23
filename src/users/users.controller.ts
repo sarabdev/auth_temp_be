@@ -96,6 +96,21 @@ export class UsersController
     }
   }
 
+  @Roles('Auth_Admin')
+  @Get('findAllUserByAuth_Admin')
+  async findAllByAuth_Admin(@Req() req)
+  {
+    try
+    {
+      const companyId = req.user.companyId;
+
+      return await this.usersService.findAllByAuth_Admin(companyId);
+    } catch (error)
+    {
+      throw error;
+    }
+  }
+
   @Get('/me')
   async findme(@Req() req)
   {

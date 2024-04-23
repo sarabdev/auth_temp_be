@@ -65,6 +65,29 @@ export class UsersService {
     }
   }
 
+
+  async findAllByAuth_Admin(companyId) {
+    try {
+      const user = await this.usersRepository.find({
+        where: {
+          company: companyId,
+        },
+
+        relations: {
+          company: true,
+          access: {
+            role: true,
+            application: true,
+          },
+        },
+      });
+      // Transform each user object to remove the password field
+      return user.map(({ password, ...user }) => user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findOne(id) {
     try {
       const user = await this.usersRepository.findOne({
