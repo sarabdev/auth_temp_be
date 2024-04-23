@@ -76,7 +76,7 @@ export class CompaniesService {
   async findMyCompanies(id: number) {
     try {
       const company = await this.companyRepository.find({
-        where: { id },
+        where: { users: { id: id } },
         relations: ['applications'],
       });
       return company;

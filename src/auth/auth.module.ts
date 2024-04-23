@@ -19,12 +19,14 @@ import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { AccessService } from 'src/access/access.service';
 import { ApplicationsService } from 'src/applications/applications.service';
+import { CompaniesModule } from 'src/companies/companies.module';
 @Module({
   imports: [
 
     TypeOrmModule.forFeature([ User,Company, Access, Application, Role]),
     UsersModule,
     PassportModule,
+    CompaniesModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,

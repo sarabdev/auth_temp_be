@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Request,
+  Req,
   Param,
   Patch,
   Post,
@@ -31,7 +31,7 @@ export class CompaniesController {
 
   //@Roles(Role.SUPER_ADMIN)
   @Public()
-  @Get()
+  @Get('findAll')
   async findAll() {
     try {
       return await this.companiesService.findAll();
@@ -40,7 +40,15 @@ export class CompaniesController {
     }
   }
 
-  @Roles('Super_Admin')
+  @Get('findMyCompany')
+  async findMyCompany(@Req() req) {
+    try {      
+      return await this.companiesService.findMyCompanies(req.user.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+  // @Roles('Super_Admin')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -50,14 +58,6 @@ export class CompaniesController {
     }
   }
 
-  @Get('/FindMyComppany')
-  async findMyCompany(@Request() req) {
-    try {
-      return req.user.company;
-      // return await this.companiesService.findOne(req.user.id);
-    } catch (error) {
-      throw error;
-    }
-  }
+
  
 }
