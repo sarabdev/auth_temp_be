@@ -50,7 +50,7 @@ export class CompaniesController {
     }
   }
 
-  @Get('/FindMyComppany:id')
+  @Get('/FindMyComppany')
   async findMyCompany(@Request() req) {
     try {
       return req.user.company;
