@@ -19,7 +19,7 @@ export class UsersController
   constructor(private readonly usersService: UsersService) { }
 
   @Roles('Super_Admin')
-  @Post('/CreateUserBySuperAdmin')
+  @Post('/CreateUserBySuperAdmin/:companyId')
   async create(
     @Body() createUserDto: CreateUserDto,
     @Param('companyId') companyId: number,

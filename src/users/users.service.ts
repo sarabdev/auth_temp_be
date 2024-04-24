@@ -46,9 +46,8 @@ export class UsersService {
   async findAllByAdmin(companyId) {
     try {
       const user = await this.usersRepository.find({
-        where: {
-          company: companyId,
-        },
+        where: { company: { id: companyId } },
+        
 
         relations: {
           company: true,
@@ -68,10 +67,10 @@ export class UsersService {
 
   async findAllByAuth_Admin(companyId) {
     try {
+      
       const user = await this.usersRepository.find({
-        where: {
-          company: companyId,
-        },
+        where: { company: { id: companyId } },
+        
 
         relations: {
           company: true,
