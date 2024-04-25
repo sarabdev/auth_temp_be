@@ -75,6 +75,7 @@ export class SeederService {
         email: 'superAdmin@gmail.com',
         userName: 'Super_Admin',
         password: 'Super123',
+        company:company,
         access: [
           {
             role_id: 1,

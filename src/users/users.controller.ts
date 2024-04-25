@@ -18,7 +18,7 @@ export class UsersController
 {
   constructor(private readonly usersService: UsersService) { }
 
-  @Roles('Super_Admin')
+  // @Roles('Super_Admin')
   @Post('/CreateUserBySuperAdmin/:companyId')
   async create(
     @Body() createUserDto: CreateUserDto,

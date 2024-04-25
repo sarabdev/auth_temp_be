@@ -17,6 +17,8 @@ export class AuthService {
     try {
       //validating email
       const result = await this.userService.findExistingByEmail(loginDto.email);
+      console.log("result",result);
+      
       if (result) {
         //then validating password after hashing
         const hash = await this.passwordservice.comparePassword(
