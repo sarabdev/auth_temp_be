@@ -13,9 +13,8 @@ import { RolesService } from 'src/roles/roles.service';
 import { AccessService } from 'src/access/access.service';
 import { ConfigService } from '@nestjs/config';
 import { ApplicationsService } from 'src/applications/applications.service';
-import Platform from 'src/Public/Entities/platform.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([User,Platform, Company, Access, Application, Role])],
+  imports: [TypeOrmModule.forFeature([User, Company, Access, Application, Role])],
   providers: [SeederService,UsersService,CompaniesService,PasswordService,RolesService,AccessService,ConfigService,ApplicationsService],
   exports: [SeederService]
 })

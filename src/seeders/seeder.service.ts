@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { CompaniesService } from 'src/companies/companies.service';
 import Role from 'src/Public/Entities/roles.entity';
-import Platform from 'src/Public/Entities/platform.entity';
 
 @Injectable()
 export class SeederService {
@@ -14,30 +13,13 @@ export class SeederService {
     private readonly applicationRepository: Repository<Application>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-    @InjectRepository(Platform)
-    private readonly platformRepository: Repository<Platform>,
     private usersService: UsersService,
     private companiesService: CompaniesService,
   ) {}
 
   async seed() {
     try {
-      // Seed Platforms
-      const platformM = {
-        name: 'mobile',
-      };
-      const platformW = {
-        name: 'web',
-      };
-      const platformB = {
-        name: 'Both',
-      };
-      let platformMobile = await this.platformRepository.save(platformM);
-      let platformWeb = await this.platformRepository.save(platformW);
-      let platformBoth = await this.platformRepository.save(platformB);
-      // Save the Platform
-
-      console.log('Platforms seeded successfully');
+      
 
       // Seed applications
       const applicationsData = [
@@ -83,37 +65,30 @@ export class SeederService {
         {
           name: 'Super_Admin',
           description: 'Description of Super_Admin',
-          platform: platformBoth,
         },
         {
           name: 'Auth_Admin',
           description: 'Description of Auth_Admin',
-          platform: platformBoth,
         },
         {
           name: 'Admin',
           description: 'Description of Admin',
-          platform: platformWeb,
         },
         {
           name: 'User',
           description: 'Description of User',
-          platform: platformBoth,
         },
         {
           name: 'Tele_Marketer',
           description: 'Description of Tele_Marketer',
-          platform: platformBoth,
         },
         {
           name: 'Mobile',
           description: 'Description of Mobile',
-          platform: platformMobile,
         },
         {
           name: 'Manufacturer',
           description: 'Description of Manufacturer',
-          platform: platformWeb,
         },
       ];
 
@@ -123,7 +98,6 @@ export class SeederService {
         const role = new Role();
         role.name = roleData.name;
         role.description = roleData.description;
-        role.platform = roleData.platform;
         await this.roleRepository.save(role); // Save the role
       }
 

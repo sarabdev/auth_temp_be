@@ -21,7 +21,6 @@ import { SeederModule } from './seeders/seeder.module';
 import { User } from './Public/Entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { ScanningDetails } from './Public/Entities/scandetails.entity';
-import Platform from './Public/Entities/platform.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -31,11 +30,11 @@ import Platform from './Public/Entities/platform.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Company, Application,ScanningDetails,Platform, Access, Role],
+      entities: [User, Company, Application,ScanningDetails, Access, Role],
       synchronize: true,
 
     }),
-    TypeOrmModule.forFeature([User, Company, Application,ScanningDetails,Platform, Access, Role]),
+    TypeOrmModule.forFeature([User, Company, Application,ScanningDetails, Access, Role]),
     UsersModule,
     CompaniesModule,
     AuthModule,
