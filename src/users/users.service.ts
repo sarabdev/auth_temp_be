@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { CompaniesService } from '../companies/companies.service';
 import { PasswordService } from '../password/password.service';
 import { CreateUserDto } from './dto/create-userdto';
-import { User } from './entities/user.entity';
+import { User } from '../Public/Entities/user.entity';
 import { AccessService } from '../access/access.service';
 import { access } from 'fs';
 import { application } from 'express';

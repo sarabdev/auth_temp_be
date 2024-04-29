@@ -3,23 +3,25 @@ import { ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccessModule } from './access/access.module';
-import { Access } from './access/entities/access.entity';
+import { Access } from './Public/Entities/access.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApplicationsModule } from './applications/applications.module';
 import { ApplicationsService } from './applications/applications.service';
-import { Application } from './applications/entities/application.entity';
+import { Application } from './Public/Entities/application.entity';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { CompaniesModule } from './companies/companies.module';
-import { Company } from './companies/entities/company.entity';
+import { Company } from './Public/Entities/company.entity';
 import { PasswordModule } from './password/password.module';
-import { Role } from './roles/entities/role.entity';
+import { Role } from './Public/Entities/roles.entity';
 import { RolesModule } from './roles/roles.module';
 import { SeederModule } from './seeders/seeder.module';
-import { User } from './users/entities/user.entity';
+import { User } from './Public/Entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { ScanningDetails } from './Public/Entities/scandetails.entity';
+import Platform from './Public/Entities/platform.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -29,11 +31,11 @@ import { UsersModule } from './users/users.module';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Company, Application, Access, Role],
+      entities: [User, Company, Application,ScanningDetails,Platform, Access, Role],
       synchronize: true,
 
     }),
-    TypeOrmModule.forFeature([User, Company, Application, Access, Role]),
+    TypeOrmModule.forFeature([User, Company, Application,ScanningDetails,Platform, Access, Role]),
     UsersModule,
     CompaniesModule,
     AuthModule,

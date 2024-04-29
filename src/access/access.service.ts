@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAccessDto } from './dto/create-access.dto';
 import { UpdateAccessDto } from './dto/update-access.dto';
-import { Access } from './entities/access.entity';
+import { Access } from '../Public/Entities/access.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationsService } from '../applications/applications.service';
 import { RolesService } from 'src/roles/roles.service';
-import { Application } from '../applications/entities/application.entity';
-import { Role } from '../roles/entities/role.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Application } from '../Public/Entities/application.entity';
+import { Role } from 'src/Public/Entities/roles.entity';
+import { User } from 'src/Public/Entities/user.entity';
 
 @Injectable()
 export class AccessService {

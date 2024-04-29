@@ -7,9 +7,9 @@ import {
   JoinTable,
   ManyToMany,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity'; // Adjust the path as per your project structure
-import { Application } from 'src/applications/entities/application.entity';
-import { Role } from 'src/roles/entities/role.entity';
+import { Application } from './application.entity';
+import Role from './roles.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Access {

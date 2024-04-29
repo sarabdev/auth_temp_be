@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Access } from 'src/access/entities/access.entity';
-import { Application } from 'src/applications/entities/application.entity';
+import { Access } from 'src/Public/Entities/access.entity';
+import { Application } from 'src/Public/Entities/application.entity';
 import { CompaniesService } from 'src/companies/companies.service';
-import { Company } from 'src/companies/entities/company.entity';
+import { Company } from 'src/Public/Entities/company.entity';
 import { PasswordService } from 'src/password/password.service';
-import { Role } from 'src/roles/entities/role.entity';
+import { Role } from 'src/Public/Entities/roles.entity';
 import { RolesService } from 'src/roles/roles.service';
 import { CompaniesModule } from '../companies/companies.module'; // Import the module providing CompanyRepository
-import { User } from './entities/user.entity';
+import { User } from '../Public/Entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { AccessService } from '../access/access.service';

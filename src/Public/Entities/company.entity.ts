@@ -1,14 +1,7 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToOne,
-} from 'typeorm';
-import { User } from '../../users/entities/user.entity'; // Adjust the path as per your project structure
-import { Application } from 'src/applications/entities/application.entity';
-import { application } from 'express';
-import { ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinTable, ManyToMany } from "typeorm";
+import { ScanningDetails } from "./scandetails.entity";
+import { Application } from "./application.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Company {
@@ -35,4 +28,10 @@ export class Company {
   })
   @JoinTable()
   applications: Application[];
+
+  @OneToMany(
+    () => ScanningDetails,
+    (scanningDetails) => scanningDetails.company
+  )
+  ScanningDetails?: ScanningDetails[];
 }

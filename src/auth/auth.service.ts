@@ -4,7 +4,7 @@ import { PasswordService } from 'src/password/password.service';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { access } from 'fs';
-import { Access } from '../access/entities/access.entity';
+import { Access } from '../Public/Entities/access.entity';
 
 @Injectable()
 export class AuthService {

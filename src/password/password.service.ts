@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/Public/Entities/user.entity';
 import { Repository } from 'typeorm';
 const saltOrRounds = 10;
 @Injectable()

@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import
-{
-  IsArray,
-  IsEmail,
-  IsNotEmpty,
-  ValidateNested
-} from 'class-validator';
+import { IsArray, IsEmail, IsNotEmpty, ValidateNested } from 'class-validator';
 // import { Role } from '../entities/user.entity';
 
 class UserObject {
@@ -18,10 +12,7 @@ class UserObject {
   application_id: number;
 }
 
-
-export class CreateUserDto
-{
-
+export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
   @ApiProperty()
@@ -39,5 +30,4 @@ export class CreateUserDto
   @ValidateNested({ each: true })
   @ApiProperty({ type: [UserObject] })
   access: UserObject[];
-  
 }
