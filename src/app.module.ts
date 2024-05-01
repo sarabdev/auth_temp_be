@@ -21,6 +21,7 @@ import { SeederModule } from './seeders/seeder.module';
 import { User } from './Public/Entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { ScanningDetails } from './Public/Entities/scandetails.entity';
+import { Products } from './Public/Entities/products.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -30,11 +31,26 @@ import { ScanningDetails } from './Public/Entities/scandetails.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Company, Application,ScanningDetails, Access, Role],
+      entities: [
+        User,
+        Company,
+        Application,
+        ScanningDetails,
+        Products,
+        Access,
+        Role,
+      ],
       synchronize: true,
-
     }),
-    TypeOrmModule.forFeature([User, Company, Application,ScanningDetails, Access, Role]),
+    TypeOrmModule.forFeature([
+      User,
+      Company,
+      Application,
+      Products,
+      ScanningDetails,
+      Access,
+      Role,
+    ]),
     UsersModule,
     CompaniesModule,
     AuthModule,
@@ -42,10 +58,9 @@ import { ScanningDetails } from './Public/Entities/scandetails.entity';
     ApplicationsModule,
     RolesModule,
     AccessModule,
-    SeederModule
+    SeederModule,
   ],
   controllers: [AppController],
-
 
   providers: [
     ApplicationsService,
@@ -66,6 +81,4 @@ import { ScanningDetails } from './Public/Entities/scandetails.entity';
     },
   ],
 })
-
-export class AppModule
-{ }
+export class AppModule {}

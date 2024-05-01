@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
 import { Transform } from "class-transformer";
-import { Role } from "./roles.entity";
 import { Access } from "./access.entity";
 import { Company } from "./company.entity";
 
@@ -55,6 +54,9 @@ export class User {
   @Column({ default: false })
   is_verified: boolean;
 
+  @Column({ default: null, nullable: true })
+  token: string;
+  
   @Column()
   userName: string;
 
@@ -64,4 +66,6 @@ export class User {
 
   @ManyToOne(() => Company, (company) => company.users, { nullable: true })
   company: Company | null;
+
+  
 }

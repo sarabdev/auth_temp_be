@@ -90,6 +90,14 @@ export class SeederService {
           name: 'Manufacturer',
           description: 'Description of Manufacturer',
         },
+        {
+          name: 'Tele_Marketer_Manager',
+          description: 'Description of Tele_Marketer_Manager',
+        },
+        {
+          name: 'Product_Advocate',
+          description: 'Description of Product_Advocate',
+        },
       ];
 
       for (const roleData of rolesData) {

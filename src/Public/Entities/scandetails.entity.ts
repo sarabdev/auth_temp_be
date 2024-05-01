@@ -6,7 +6,6 @@ import {
   JoinColumn,
 } from "typeorm";
 import { User } from "./user.entity";
-import { Company } from "./company.entity";
 
 @Entity()
 export class ScanningDetails {
@@ -47,6 +46,4 @@ export class ScanningDetails {
   @Column()
   result: string;
 
-  @ManyToOne(() => Company, (company) => company.ScanningDetails, { nullable: true })
-  company: Company | null;
 }

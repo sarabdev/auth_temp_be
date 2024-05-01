@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinTable, ManyToMan
 import { ScanningDetails } from "./scandetails.entity";
 import { Application } from "./application.entity";
 import { User } from "./user.entity";
+import { Products } from "./products.entity";
 
 @Entity()
 export class Company {
@@ -29,9 +30,6 @@ export class Company {
   @JoinTable()
   applications: Application[];
 
-  @OneToMany(
-    () => ScanningDetails,
-    (scanningDetails) => scanningDetails.company
-  )
-  ScanningDetails?: ScanningDetails[];
+  @OneToMany(() => Products, (products) => products.company)
+  products?: Products[];
 }

@@ -5,8 +5,9 @@ import {
   ManyToOne,
   JoinColumn,
   Unique,
-} from "typeorm";
-import { ScanningDetails } from "./scandetails.entity";
+} from 'typeorm';
+import { ScanningDetails } from './scandetails.entity';
+import { Company } from './company.entity';
 
 @Entity()
 export class Products {
@@ -17,7 +18,7 @@ export class Products {
   clientId: number;
 
   @Column()
-  @Unique(["itemNumber"])
+  @Unique(['itemNumber'])
   itemNumber: string;
 
   @Column()
@@ -64,4 +65,9 @@ export class Products {
 
   @Column({ default: 0 })
   scan_count: number;
+
+  @ManyToOne(() => Company, (company) => company.products, {
+    nullable: true,
+  })
+  company: Company | null;
 }
