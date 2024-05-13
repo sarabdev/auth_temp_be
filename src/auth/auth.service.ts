@@ -52,6 +52,7 @@ export class AuthService {
 if(data.company){
        payload = {
         id: data.id,
+        sub: data.id,
         userName: data.userName,
         roles: roleNames,
         email: data.email,
@@ -61,6 +62,8 @@ if(data.company){
     else{
       payload = {
         id: data.id,
+        sub: data.id,
+
         userName: data.userName,
         roles: roleNames,
         email: data.email,

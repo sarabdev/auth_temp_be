@@ -6,6 +6,8 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
 import { Transform } from "class-transformer";
@@ -59,6 +61,15 @@ export class User {
   
   @Column()
   userName: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  deleted_at: Date | null;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @ManyToMany(() => Access, (access) => access.user)
   @JoinTable()

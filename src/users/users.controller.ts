@@ -27,6 +27,7 @@ export class UsersController
   {
     try
     {
+      console.log(createUserDto)
       return await this.usersService.createUserBySuperAdmin(
         createUserDto,
         companyId,

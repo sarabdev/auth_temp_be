@@ -30,7 +30,7 @@ import { CompaniesModule } from 'src/companies/companies.module';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1w' },
+      signOptions: { expiresIn: '1d', algorithm:'HS256' },
     }),
   ],
   controllers: [AuthController],
