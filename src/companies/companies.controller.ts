@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public, Roles } from 'src/auth/constants';
@@ -24,6 +25,16 @@ export class CompaniesController {
   async create(@Body() createCompanyDto: CreateCompanyDto) {
     try {
       return await this.companiesService.create(createCompanyDto);
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  @Public()
+  @Put()
+  async edit(@Body() editCompanyDto: any) {
+    try {
+      return await this.companiesService.edit(editCompanyDto);
     } catch (error) {
       throw error;
     }

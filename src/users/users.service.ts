@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolesService } from 'src/roles/roles.service';
+import { ApplicationsService } from 'src/applications/applications.service';
 import { Repository } from 'typeorm';
 import { CompaniesService } from '../companies/companies.service';
 import { PasswordService } from '../password/password.service';
@@ -22,6 +23,7 @@ export class UsersService {
     private companiesService: CompaniesService,
     private passwordService: PasswordService,
     private rolesService: RolesService,
+    private applicationService: ApplicationsService,
     private accessService: AccessService,
   ) {}
 
@@ -244,6 +246,70 @@ console.log("createAcess",createAccess);
     }
   }
 
+  async editUserBySuperAdmin(userId: number, editUserDto: any) {
+    try {
+      const user = await this.usersRepository.findOne({where:{id:userId},  relations: ['access'] });
+  
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+  
+      // Check if the email is already used by another user
+      if (editUserDto.email && editUserDto.email !== user.email) {
+        const existingUser = await this.findExistingByEmail(editUserDto.email);
+        if (existingUser) {
+          throw new BadRequestException('A user with this Email Address already exists');
+        }
+      }
+  
+      // Update user properties
+      if (editUserDto.email) user.email = editUserDto.email;
+      if (editUserDto.userName) user.userName = editUserDto.userName;
+      if (editUserDto.selectedCompany) user.company= editUserDto.selectedCompany
+      // if (editUserDto.password) {
+      //   const hash = await this.passwordService.hashPassword(editUserDto.password);
+      //   user.password = hash;
+      // }
+  
+      // Update access array if provided
+      if (editUserDto.access) {
+        const updatedAccessArray = [];
+        for (const accessData of editUserDto.access) {
+          let access = user.access.find(a => a.id === accessData.id);
+          if (access) {
+            // Find the corresponding role and application objects
+            const role = await this.rolesService.findOne(accessData.role_id);
+            const application = await this.applicationService.findOne(accessData.application_id);
+      
+            if (!role || !application) {
+              // Handle error if role or application is not found
+              throw new NotFoundException(`Role or Application not found for access ID ${accessData.id}`);
+            }
+      
+            // Assign the found role and application to the access entry
+            access.role = role;
+            access.application = application;
+      
+            // Save the updated access entry
+            const updatedAccess = await this.accessService.edit(access.id, access);
+            updatedAccessArray.push(updatedAccess);
+          }
+        }
+        user.access = updatedAccessArray;
+      }
+      
+  
+      // Save the updated user to the database
+      const updatedUser = await this.usersRepository.save(user);
+  
+      // Destructure the password field and return the modified user object
+      const { password, ...result } = updatedUser;
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
   async createUserByAuthAdmin(createUserDto: CreateUserDto, companyId: number) {
     try {
       // if (createUserDto.roles === 'super_admin') {

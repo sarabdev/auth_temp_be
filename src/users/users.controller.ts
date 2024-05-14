@@ -4,6 +4,7 @@ import
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req
 } from '@nestjs/common';
@@ -27,7 +28,6 @@ export class UsersController
   {
     try
     {
-      console.log(createUserDto)
       return await this.usersService.createUserBySuperAdmin(
         createUserDto,
         companyId,
@@ -37,6 +37,22 @@ export class UsersController
       throw error;
     }
   }
+
+
+  @Patch('/EditUserBySuperAdmin/:userId')
+async edit(
+  @Body() editUserDto: any,
+  @Param('userId') userId: number,
+) {
+  try {
+    return await this.usersService.editUserBySuperAdmin(
+      userId,
+      editUserDto,
+    );
+  } catch (error) {
+    throw error;
+  }
+}
 
   // //@Roles(Role.ADMIN)
   // @Post('/CreateUserByAdmin')

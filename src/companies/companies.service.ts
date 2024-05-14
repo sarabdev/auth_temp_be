@@ -51,6 +51,52 @@ export class CompaniesService {
     }
   }
 
+  async edit(editCompanyDto: any) {
+    try {
+      const { name, address, url, logoUrl, applicationIds, id } = editCompanyDto;
+      
+      // Find the company to edit
+      const company = await this.companyRepository.findOne({where:{id}});
+
+      if (!company) {
+        throw new BadRequestException('Company not found');
+      }
+
+      // Check if the new name or URL is already used by another company
+      if (name !== company.name) {
+        const existingCompany = await this.companyRepository.findOne({
+          where: {
+            name: name,
+            url: url,
+          },
+        });
+  
+        if (existingCompany) {
+          throw new BadRequestException('This Company Name or URL is Already Reserved');
+        }
+      }
+
+      // Update company properties
+      if (name) company.name = name;
+      if (address) company.address = address;
+      if (url) company.url = url;
+      if (logoUrl) company.logoUrl = logoUrl;
+
+      // Find applications by IDs
+      const applications =
+        await this.applicationsService.findByApplicationIds(applicationIds);
+
+      // Assign applications to the company
+      company.applications = applications;
+
+      // Save the updated company to the database
+      return this.companyRepository.save(company);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
   async findAll() {
     try {
       return await this.companyRepository.find({

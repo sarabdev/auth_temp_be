@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccessDto } from './dto/create-access.dto';
 import { UpdateAccessDto } from './dto/update-access.dto';
 import { Access } from '../Public/Entities/access.entity';
@@ -47,6 +47,39 @@ export class AccessService {
     
   }
 
+  async edit(id: number, editAccessDto: any) {
+    try {
+      // Find the access entry to edit
+      const access = await this.accessRepository.findOne({where:{id},  relations: ['user', 'application', 'role'] });
+  
+      if (!access) {
+        throw new NotFoundException(`Access with ID ${id} not found`);
+      }
+  
+      // Update access properties
+      if (editAccessDto.role_id) {
+        const role = await this.rolesService.findOne(editAccessDto.role_id);
+        if (!role) {
+          throw new NotFoundException(`Role with ID ${editAccessDto.role_id} not found`);
+        }
+        access.role = role;
+      }
+  
+      if (editAccessDto.application_id) {
+        const application = await this.applicationService.findOne(editAccessDto.application_id);
+        if (!application) {
+          throw new NotFoundException(`Application with ID ${editAccessDto.application_id} not found`);
+        }
+        access.application = application;
+      }
+  
+      // Save the updated access to the database
+      return await this.accessRepository.save(access);
+    } catch (error) {
+      throw error;
+    }
+  }
+  
   async findAll() {
     try {
       const access = await this.accessRepository.find({
