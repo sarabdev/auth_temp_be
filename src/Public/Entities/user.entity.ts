@@ -47,7 +47,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({})
+  @Column({ nullable: true })
   password: string;
 
   @Column({ default: false })
@@ -58,8 +58,8 @@ export class User {
 
   @Column({ default: null, nullable: true })
   token: string;
-  
-  @Column()
+
+  @Column({ nullable: true })
   userName: string;
 
   @Column({ nullable: true, type: 'timestamp' })
@@ -78,5 +78,5 @@ export class User {
   @ManyToOne(() => Company, (company) => company.users, { nullable: true })
   company: Company | null;
 
-  
+
 }
