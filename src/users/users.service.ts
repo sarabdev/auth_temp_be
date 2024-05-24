@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +15,8 @@ import { User } from '../Public/Entities/user.entity';
 import { AccessService } from '../access/access.service';
 import { access } from 'fs';
 import { application } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Injectable()
 export class UsersService {
@@ -25,11 +28,12 @@ export class UsersService {
     private rolesService: RolesService,
     private applicationService: ApplicationsService,
     private accessService: AccessService,
-  ) {}
+  ) { }
 
   async findAll() {
     try {
       const user = await this.usersRepository.find({
+        where: { is_deleted: false },
         relations: {
           company: true,
           access: {
@@ -48,8 +52,8 @@ export class UsersService {
   async findAllByAdmin(companyId) {
     try {
       const user = await this.usersRepository.find({
-        where: { company: { id: companyId } },
-        
+        where: { company: { id: companyId }, is_deleted: false },
+
 
         relations: {
           company: true,
@@ -69,10 +73,10 @@ export class UsersService {
 
   async findAllByAuth_Admin(companyId) {
     try {
-      
+
       const user = await this.usersRepository.find({
-        where: { company: { id: companyId } },
-        
+        where: { company: { id: companyId }, is_deleted: false },
+
 
         relations: {
           company: true,
@@ -227,7 +231,7 @@ export class UsersService {
             application_id: element.application_id,
           };
           createAccess = await this.accessService.create(acessData);
-console.log("createAcess",createAccess);
+          console.log("createAcess", createAccess);
 
           createdAccessArray.push(createAccess);
         }
@@ -248,12 +252,12 @@ console.log("createAcess",createAccess);
 
   async editUserBySuperAdmin(userId: number, editUserDto: any) {
     try {
-      const user = await this.usersRepository.findOne({where:{id:userId},  relations: ['access'] });
-  
+      const user = await this.usersRepository.findOne({ where: { id: userId }, relations: ['access'] });
+
       if (!user) {
         throw new NotFoundException(`User with ID ${userId} not found`);
       }
-  
+
       // Check if the email is already used by another user
       if (editUserDto.email && editUserDto.email !== user.email) {
         const existingUser = await this.findExistingByEmail(editUserDto.email);
@@ -261,16 +265,16 @@ console.log("createAcess",createAccess);
           throw new BadRequestException('A user with this Email Address already exists');
         }
       }
-  
+
       // Update user properties
       if (editUserDto.email) user.email = editUserDto.email;
       if (editUserDto.userName) user.userName = editUserDto.userName;
-      if (editUserDto.selectedCompany) user.company= editUserDto.selectedCompany
+      if (editUserDto.selectedCompany) user.company = editUserDto.selectedCompany
       // if (editUserDto.password) {
       //   const hash = await this.passwordService.hashPassword(editUserDto.password);
       //   user.password = hash;
       // }
-  
+
       // Update access array if provided
       if (editUserDto.access) {
         const updatedAccessArray = [];
@@ -280,16 +284,16 @@ console.log("createAcess",createAccess);
             // Find the corresponding role and application objects
             const role = await this.rolesService.findOne(accessData.role_id);
             const application = await this.applicationService.findOne(accessData.application_id);
-      
+
             if (!role || !application) {
               // Handle error if role or application is not found
               throw new NotFoundException(`Role or Application not found for access ID ${accessData.id}`);
             }
-      
+
             // Assign the found role and application to the access entry
             access.role = role;
             access.application = application;
-      
+
             // Save the updated access entry
             const updatedAccess = await this.accessService.edit(access.id, access);
             updatedAccessArray.push(updatedAccess);
@@ -297,11 +301,11 @@ console.log("createAcess",createAccess);
         }
         user.access = updatedAccessArray;
       }
-      
-  
+
+
       // Save the updated user to the database
       const updatedUser = await this.usersRepository.save(user);
-  
+
       // Destructure the password field and return the modified user object
       const { password, ...result } = updatedUser;
       return result;
@@ -309,7 +313,7 @@ console.log("createAcess",createAccess);
       throw error;
     }
   }
-  
+
   async createUserByAuthAdmin(createUserDto: CreateUserDto, companyId: number) {
     try {
       // if (createUserDto.roles === 'super_admin') {
@@ -371,5 +375,40 @@ console.log("createAcess",createAccess);
     } catch (error) {
       throw error;
     }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOne({ where: { email } });
+    } catch (error) {
+      throw new InternalServerErrorException('Error finding user by email');
+    }
+  }
+
+  async generateResetToken(email: string): Promise<string> {
+    try {
+      const user = await this.findByEmail(email);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const resetToken = uuidv4();
+      user.resetToken = resetToken;
+      user.resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+
+      await this.usersRepository.save(user);
+      return resetToken;
+    } catch (error) {
+      throw new InternalServerErrorException('Error generating reset token');
+    }
+  }
+
+  async markAsDeleted(id: any): Promise<any> {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Company with ID ${id} not found`);
+    }
+    user.is_deleted = true;
+    return this.usersRepository.save(user);
   }
 }

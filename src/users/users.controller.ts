@@ -1,5 +1,4 @@
-import
-{
+import {
   Body,
   Controller,
   Get,
@@ -15,8 +14,7 @@ import { UsersService } from './users.service';
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('users')
-export class UsersController
-{
+export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   // @Roles('Super_Admin')
@@ -24,35 +22,32 @@ export class UsersController
   async create(
     @Body() createUserDto: CreateUserDto,
     @Param('companyId') companyId: number,
-  )
-  {
-    try
-    {
+  ) {
+    try {
       return await this.usersService.createUserBySuperAdmin(
         createUserDto,
         companyId,
       );
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
 
   @Patch('/EditUserBySuperAdmin/:userId')
-async edit(
-  @Body() editUserDto: any,
-  @Param('userId') userId: number,
-) {
-  try {
-    return await this.usersService.editUserBySuperAdmin(
-      userId,
-      editUserDto,
-    );
-  } catch (error) {
-    throw error;
+  async edit(
+    @Body() editUserDto: any,
+    @Param('userId') userId: number,
+  ) {
+    try {
+      return await this.usersService.editUserBySuperAdmin(
+        userId,
+        editUserDto,
+      );
+    } catch (error) {
+      throw error;
+    }
   }
-}
 
   // //@Roles(Role.ADMIN)
   // @Post('/CreateUserByAdmin')
@@ -70,84 +65,71 @@ async edit(
 
   @Roles('Auth_Admin')
   @Post('/CreateUserByAdmin')
-  async createUserByAuthAdmin(@Body() createUserDto: CreateUserDto, @Req() req)
-  {
-    try
-    {
+  async createUserByAuthAdmin(@Body() createUserDto: CreateUserDto, @Req() req) {
+    try {
       const companyId = req.user.companyId;
       return await this.usersService.createUserByAuthAdmin(
         createUserDto,
         companyId,
       );
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
+  @Post('/delete_user/:id')
+  async deleteUser(@Param('id') id: string): Promise<any> {
+    return this.usersService.markAsDeleted(id);
+  }
+
   @Roles('Super_Admin')
   @Get()
-  async findAll()
-  {
-    try
-    {
+  async findAll() {
+    try {
       return await this.usersService.findAll();
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
   @Roles('Admin')
   @Get('findAllUserByAdmin')
-  async findAllByAdmin(@Req() req)
-  {
-    try
-    {
+  async findAllByAdmin(@Req() req) {
+    try {
       const companyId = req.user.companyId;
 
       return await this.usersService.findAllByAdmin(companyId);
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
   @Roles('Auth_Admin')
   @Get('findAllUserByAuth_Admin')
-  async findAllByAuth_Admin(@Req() req)
-  {
-    try
-    {
+  async findAllByAuth_Admin(@Req() req) {
+    try {
       const companyId = req.user.companyId;
 
       return await this.usersService.findAllByAuth_Admin(companyId);
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
   @Get('/me')
-  async findme(@Req() req)
-  {
-    try
-    {
+  async findme(@Req() req) {
+    try {
       return await this.usersService.findOne(req.user.id)
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string)
-  {
-    try
-    {
+  async findOne(@Param('id') id: string) {
+    try {
       return await this.usersService.findOne(+id);
-    } catch (error)
-    {
+    } catch (error) {
       throw error;
     }
   }

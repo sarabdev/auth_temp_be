@@ -9,6 +9,9 @@ import {
   UseGuards,
   Query,
   Req,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -29,7 +32,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private passwordService: PasswordService,
-  ) {}
+  ) { }
 
   @Public()
   @Post('login')
@@ -37,15 +40,17 @@ export class AuthController {
     try {
       // const referer = req.headers.referer;
 
-  return await this.authService.login(loginUserDto);
-      
-      
-  
-
-      
+      return await this.authService.login(loginUserDto);
     } catch (error) {
       throw error;
     }
+  }
+
+  @Public()
+  @Post('forgot-password')
+  async forgotPassword(@Body() createResetDto: any) {
+    return await this.authService.sendPasswordResetEmail(createResetDto);
+
   }
 
   //   @Public()

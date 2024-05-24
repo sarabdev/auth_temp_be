@@ -59,6 +59,9 @@ export class User {
   @Column({ default: null, nullable: true })
   token: string;
 
+  @Column({ default: false })
+  is_deleted: boolean;
+
   @Column({ nullable: true })
   userName: string;
 
@@ -77,6 +80,13 @@ export class User {
 
   @ManyToOne(() => Company, (company) => company.users, { nullable: true })
   company: Company | null;
+
+
+  @Column({ nullable: true })
+  resetToken: string;
+
+  @Column({ nullable: true })
+  resetTokenExpiry: Date;
 
 
 }

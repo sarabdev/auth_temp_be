@@ -3,6 +3,7 @@ import { ScanningDetails } from "./scandetails.entity";
 import { Application } from "./application.entity";
 import { User } from "./user.entity";
 import { Products } from "./products.entity";
+import { ProductAdvocate } from "./product_advocate.entity";
 
 @Entity()
 export class Company {
@@ -24,6 +25,9 @@ export class Company {
   @OneToMany(() => User, (user) => user.company)
   users?: User[];
 
+  @Column({ default: false })
+  is_deleted: boolean;
+
   @ManyToMany(() => Application, (application) => application.company, {
     cascade: true,
   })
@@ -32,4 +36,7 @@ export class Company {
 
   @OneToMany(() => Products, (products) => products.company)
   products?: Products[];
+
+  @OneToMany(() => ProductAdvocate, productAdvocate => productAdvocate.company)
+  productAdvocates: ProductAdvocate[];
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from '../Public/Entities/company.entity';
@@ -13,7 +13,7 @@ export class CompaniesService {
     @InjectRepository(Company)
     private companyRepository: Repository<Company>,
     private applicationsService: ApplicationsService,
-  ) {}
+  ) { }
 
   async create(createCompanyDto: CreateCompanyDto) {
     try {
@@ -51,30 +51,39 @@ export class CompaniesService {
     }
   }
 
+  async markAsDeleted(id: any): Promise<any> {
+    const company = await this.companyRepository.findOne({ where: { id } });
+    if (!company) {
+      throw new NotFoundException(`Company with ID ${id} not found`);
+    }
+    company.is_deleted = true;
+    return this.companyRepository.save(company);
+  }
+
   async edit(editCompanyDto: any) {
     try {
       const { name, address, url, logoUrl, applicationIds, id } = editCompanyDto;
-      
+
       // Find the company to edit
-      const company = await this.companyRepository.findOne({where:{id}});
+      const company = await this.companyRepository.findOne({ where: { id } });
 
       if (!company) {
         throw new BadRequestException('Company not found');
       }
 
-      // Check if the new name or URL is already used by another company
-      if (name !== company.name) {
-        const existingCompany = await this.companyRepository.findOne({
-          where: {
-            name: name,
-            url: url,
-          },
-        });
-  
-        if (existingCompany) {
-          throw new BadRequestException('This Company Name or URL is Already Reserved');
-        }
-      }
+      // // Check if the new name or URL is already used by another company
+      // if (name !== company.name) {
+      //   const existingCompany = await this.companyRepository.findOne({
+      //     where: {
+      //       name: name,
+      //       url: url,
+      //     },
+      //   });
+
+      //   if (existingCompany) {
+      //     throw new BadRequestException('This Company Name or URL is Already Reserved');
+      //   }
+      // }
 
       // Update company properties
       if (name) company.name = name;
@@ -100,6 +109,7 @@ export class CompaniesService {
   async findAll() {
     try {
       return await this.companyRepository.find({
+        where: { is_deleted: false },
         relations: ['applications'],
       });
     } catch (error) {

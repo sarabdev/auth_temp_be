@@ -18,7 +18,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 @ApiBearerAuth()
 @Controller('companies')
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) {}
+  constructor(private readonly companiesService: CompaniesService) { }
   @Public()
   // @Roles('Super_Admin')
   @Post()
@@ -29,7 +29,7 @@ export class CompaniesController {
       throw error;
     }
   }
-  
+
   @Public()
   @Put()
   async edit(@Body() editCompanyDto: any) {
@@ -53,7 +53,7 @@ export class CompaniesController {
 
   @Get('findMyCompany')
   async findMyCompany(@Req() req) {
-    try {      
+    try {
       return await this.companiesService.findMyCompanies(req.user.id);
     } catch (error) {
       throw error;
@@ -69,6 +69,10 @@ export class CompaniesController {
     }
   }
 
+  @Post('/delete_company/:id')
+  async deleteCompany(@Param('id') id: string): Promise<any> {
+    return this.companiesService.markAsDeleted(id);
+  }
 
- 
+
 }

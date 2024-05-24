@@ -22,6 +22,9 @@ import { User } from './Public/Entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { ScanningDetails } from './Public/Entities/scandetails.entity';
 import { Products } from './Public/Entities/products.entity';
+import { ProductAdvocate } from './Public/Entities/product_advocate.entity';
+import { ProductAdvocateController } from './product_advocates/product_adovates.controller';
+import { ProductAdvocatesService } from './product_advocates/product_advocates.service';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -39,6 +42,7 @@ import { Products } from './Public/Entities/products.entity';
         Products,
         Access,
         Role,
+        ProductAdvocate
       ],
       synchronize: true,
     }),
@@ -50,6 +54,7 @@ import { Products } from './Public/Entities/products.entity';
       ScanningDetails,
       Access,
       Role,
+      ProductAdvocate
     ]),
     UsersModule,
     CompaniesModule,
@@ -60,11 +65,12 @@ import { Products } from './Public/Entities/products.entity';
     AccessModule,
     SeederModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ProductAdvocateController],
 
   providers: [
     ApplicationsService,
     AppService,
+    ProductAdvocatesService,
     ConfigService,
 
     {
@@ -81,4 +87,4 @@ import { Products } from './Public/Entities/products.entity';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
